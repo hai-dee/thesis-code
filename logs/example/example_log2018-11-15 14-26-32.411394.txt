@@ -1,0 +1,342 @@
+Examples
+
+1 Ungrasp(Init)
+Constraints: ['hand_at(Init)', 'place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'place_behind(Init, wheat4, near_wall)', 'place_touching(Init, far_wall)', 'behind_drop(Init, DarkOrange3)']
+Preconditions: ['touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, left_wall)', 'hand_behind(wheat4, near_wall)']
+Effects: ['-hand_at(Init)', '+fingers_flat()', '+hand_at(Final)']
+
+2 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'place_behind(Init, wheat4, near_wall)', 'behind_drop(Init, DarkOrange3)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, left_wall)', 'hand_behind(wheat4, near_wall)']
+Effects: ['-fingers_flat()', '-hand_at(Init)', '+fingers_closed()', '+hand_at(Final)']
+
+3 Hit(Init, Intent)
+Constraints: ['place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Intent, wheat4, near_wall)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Intent, DarkOrange3, right_wall)', 'place_behind(Init, wheat4, near_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'behind_drop(Intent, DarkOrange3)', 'behind_drop(Init, DarkOrange3)', 'place_touching(Intent, left_wall)', 'place_touching(Intent, far_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_closed()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, left_wall)', 'hand_behind(wheat4, near_wall)']
+Effects: ['-hand_behind(deepskyblue, left_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(left_wall)', '+hand_touching(far_wall)', '+hand_behind(deepskyblue, near_wall)', '+hand_at(Final)']
+
+4 MoveTo(Init, Intent)
+Constraints: ['behind_drop(Intent, DarkOrange3)', 'behind_drop(Init, DarkOrange3)', 'place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Intent, wheat4, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, DarkOrange3, right_wall)', 'place_behind(Init, wheat4, near_wall)', 'place_behind(Intent, deepskyblue, left_wall)', 'hand_at(Init)', 'place_touching(Init, far_wall)', 'place_touching(Init, left_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(left_wall)', 'hand_touching(far_wall)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, near_wall)', 'hand_behind(wheat4, near_wall)']
+Effects: ['-hand_touching(left_wall)', '-hand_touching(far_wall)', '-hand_behind(deepskyblue, near_wall)', '-hand_at(Init)', '+hand_behind(deepskyblue, left_wall)', '+hand_at(Final)']
+
+5 Hit(Init, Intent)
+Constraints: ['place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Intent, wheat4, near_wall)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Intent, DarkOrange3, right_wall)', 'place_behind(Init, wheat4, near_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'behind_drop(Intent, DarkOrange3)', 'behind_drop(Init, DarkOrange3)', 'place_touching(Intent, left_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, left_wall)', 'hand_behind(wheat4, near_wall)']
+Effects: ['-hand_behind(deepskyblue, left_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(left_wall)', '+hand_behind(deepskyblue, near_wall)', '+hand_at(Final)']
+
+6 Hit(Init, Intent)
+Constraints: ['place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Intent, wheat4, near_wall)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, DarkOrange3, right_wall)', 'place_behind(Init, wheat4, near_wall)', 'behind_drop(Intent, DarkOrange3)', 'behind_drop(Init, DarkOrange3)', 'place_touching(Intent, left_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, near_wall)', 'hand_behind(wheat4, near_wall)']
+Effects: ['-hand_behind(deepskyblue, near_wall)', '-hand_behind(wheat4, near_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(left_wall)', '+hand_touching(near_wall)', '+hand_behind(deepskyblue, far_wall)', '+hand_behind(wheat4, right_wall)', '+hand_at(Final)']
+
+7 Hit(Init, Intent)
+Constraints: ['place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Intent, wheat4, near_wall)', 'place_behind(Init, deepskyblue, far_wall)', 'place_behind(Intent, deepskyblue, right_wall)', 'place_behind(Intent, DarkOrange3, right_wall)', 'behind_drop(Intent, deepskyblue)', 'behind_drop(Intent, DarkOrange3)', 'behind_drop(Init, DarkOrange3)', 'place_touching(Intent, left_wall)', 'place_touching(Init, left_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_moving()', 'fingers_closing()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(left_wall)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, far_wall)']
+Effects: ['-fingers_moving()', '-fingers_closing()', '-hand_behind(deepskyblue, far_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(far_wall)', '+hand_behind(deepskyblue, near_wall)', '+hand_behind(wheat4, near_wall)', '+hand_at(Final)']
+
+8 Hit(Init, Intent)
+Constraints: ['place_behind(Init, DarkOrange3, right_wall)', 'place_behind(Intent, wheat4, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, DarkOrange3, right_wall)', 'place_behind(Init, wheat4, near_wall)', 'place_behind(Intent, deepskyblue, left_wall)', 'behind_drop(Intent, DarkOrange3)', 'behind_drop(Init, DarkOrange3)', 'place_touching(Init, far_wall)', 'place_touching(Intent, DarkOrange3)', 'place_near(Intent, DarkOrange3)', 'hand_at(Init)']
+Preconditions: ['fingers_moving()', 'fingers_opening()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(DarkOrange3)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)', 'hand_behind(DarkOrange3, right_wall)', 'hand_behind(deepskyblue, near_wall)', 'hand_behind(wheat4, near_wall)']
+Effects: ['-fingers_moving()', '-fingers_opening()', '-on_table(DarkOrange3)', '-hand_touching(far_wall)', '-hand_behind(deepskyblue, near_wall)', '-hand_behind(DarkOrange3, right_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(right_wall)', '+hand_behind(deepskyblue, left_wall)', '+hand_at(Final)']
+
+9 MoveTo(Init, Intent)
+Constraints: ['place_behind(Init, wheat4, near_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Intent, wheat4, near_wall)', 'hand_at(Init)', 'place_touching(Init, right_wall)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(right_wall)', 'hand_behind(wheat4, near_wall)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-touch_sensor()', '-hand_touching(right_wall)', '-hand_behind(deepskyblue, left_wall)', '-hand_at(Init)', '+hand_behind(deepskyblue, near_wall)', '+hand_at(Final)']
+
+10 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, wheat4)', 'place_touching(Init, left_wall)', 'place_behind(Init, wheat4, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, deepskyblue, left_wall)', 'place_behind(Intent, wheat4, left_wall)', 'place_near(Intent, wheat4)', 'hand_at(Init)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(left_wall)', 'hand_behind(wheat4, near_wall)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-touch_sensor()', '-hand_touching(left_wall)', '-hand_behind(deepskyblue, near_wall)', '-hand_at(Init)', '+touching(near_wall, wheat4)', '+touching(wheat4, near_wall)', '+hand_behind(deepskyblue, left_wall)', '+hand_at(Intent)']
+
+11 MoveTo(Init, Intent)
+Constraints: ['place_behind(Init, wheat4, near_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'place_behind(Intent, deepskyblue, left_wall)', 'place_behind(Intent, wheat4, near_wall)', 'hand_at(Init)', 'place_touching(Init, near_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)', 'hand_behind(wheat4, near_wall)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-hand_touching(near_wall)', '-hand_at(Init)', '+hand_at(Intent)']
+
+12 MoveTo(Init, Intent)
+Constraints: ['place_behind(Init, wheat4, near_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Intent, wheat4, near_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(wheat4, near_wall)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-hand_behind(deepskyblue, left_wall)', '-hand_at(Init)', '+hand_behind(deepskyblue, near_wall)', '+hand_at(Intent)']
+
+13 MoveTo(Init, Intent)
+Constraints: ['behind_drop(Intent, deepskyblue)', 'place_touching(Intent, near_wall)', 'place_behind(Init, wheat4, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, deepskyblue, right_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(wheat4, near_wall)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_behind(wheat4, near_wall)', '-hand_at(Init)', '+touching(near_wall, deepskyblue)', '+touching(deepskyblue, near_wall)', '+hand_at(Final)']
+
+14 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_touching(Init, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Init, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_touching(near_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(deepskyblue)', '+hand_at(Intent)']
+
+15 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, right_wall)', 'place_touching(Init, deepskyblue)', 'place_touching(Init, near_wall)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, wheat4, near_wall)', 'hand_at(Init)', 'place_near(Init, deepskyblue)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_touching(near_wall)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_touching(deepskyblue)', '-hand_touching(near_wall)', '-hand_at(Init)', '+touching(wheat4, right_wall)', '+touching(right_wall, wheat4)', '+hand_touching(right_wall)', '+hand_at(Intent)']
+
+16 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_at(Init)', '+hand_at(Intent)']
+
+17 Hit(Init, Intent)
+Constraints: ['place_touching(Intent, deepskyblue)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, wheat4, right_wall)', 'behind_drop(Intent, wheat4)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_behind(deepskyblue, near_wall)', '-hand_at(Init)', '+touch_sensor()', '+touching(left_wall, deepskyblue)', '+touching(deepskyblue, left_wall)', '+hand_touching(near_wall)', '+hand_behind(deepskyblue, left_wall)', '+hand_behind(wheat4, right_wall)', '+hand_at(Final)']
+
+18 MoveTo(Init, Intent)
+Constraints: ['behind_drop(Init, wheat4)', 'behind_drop(Intent, wheat4)', 'place_behind(Init, wheat4, right_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'place_behind(Intent, deepskyblue, left_wall)', 'place_behind(Intent, wheat4, right_wall)', 'hand_at(Init)', 'place_touching(Init, near_wall)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)', 'hand_behind(wheat4, right_wall)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-touch_sensor()', '-hand_touching(near_wall)', '-hand_at(Init)', '+hand_at(Final)']
+
+19 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_behind(Init, deepskyblue, left_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-fingers_flat()', '-hand_at(Init)', '+fingers_closed()', '+hand_at(Final)']
+
+20 MoveTo(Init, Intent)
+Constraints: ['behind_drop(Init, wheat4)', 'behind_drop(Intent, wheat4)', 'place_behind(Init, wheat4, right_wall)', 'place_behind(Init, deepskyblue, left_wall)', 'place_behind(Intent, wheat4, right_wall)', 'hand_at(Init)', 'place_touching(Init, near_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)', 'hand_behind(wheat4, right_wall)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-hand_touching(near_wall)', '-hand_behind(deepskyblue, left_wall)', '-hand_at(Init)', '+hand_at(Final)']
+
+21 Hit(Init, Intent)
+Constraints: ['behind_drop(Init, wheat4)', 'behind_drop(Intent, wheat4)', 'place_behind(Init, wheat4, right_wall)', 'place_behind(Intent, wheat4, right_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(wheat4, right_wall)']
+Effects: ['-hand_at(Init)', '+touch_sensor()', '+hand_touching(left_wall)', '+hand_at(Final)']
+
+22 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_behind(Init, wheat4, right_wall)', 'behind_drop(Init, wheat4)', 'place_touching(Init, left_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(wheat4, right_wall)']
+Effects: ['-fingers_flat()', '-hand_at(Init)', '+fingers_closed()', '+hand_at(Final)']
+
+23 Hit(Init, Intent)
+Constraints: ['behind_drop(Init, wheat4)', 'behind_drop(Intent, wheat4)', 'place_touching(Intent, near_wall)', 'place_behind(Init, wheat4, right_wall)', 'place_behind(Intent, wheat4, right_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_moving()', 'fingers_opening()', 'touching(right_wall, near_wall)', 'touching(right_wall, wheat4)', 'touching(far_wall, left_wall)', 'touching(wheat4, right_wall)', 'touching(wheat4, near_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'touching(near_wall, wheat4)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(wheat4)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(wheat4, right_wall)']
+Effects: ['-fingers_moving()', '-fingers_opening()', '-touching(wheat4, near_wall)', '-touching(near_wall, wheat4)', '-touching(right_wall, wheat4)', '-touching(wheat4, right_wall)', '-on_table(wheat4)', '-hand_behind(wheat4, right_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(right_wall)', '+hand_touching(near_wall)', '+hand_at(Final)']
+
+24 Hit(Init, Intent)
+Constraints: ['hand_at(Init)', 'place_touching(Init, near_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)']
+Effects: ['-hand_touching(near_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(far_wall)', '+hand_at(Final)']
+
+25 MoveTo(Init, Intent)
+Constraints: ['hand_at(Init)', 'place_touching(Init, far_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)']
+Effects: ['-hand_touching(far_wall)', '-hand_at(Init)', '+hand_at(Final)']
+
+26 Grasp(Init)
+Constraints: ['hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-fingers_flat()', '-hand_at(Init)', '+fingers_closed()', '+hand_at(Final)']
+
+27 Hit(Init, Intent)
+Constraints: ['place_touching(Intent, near_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+touch_sensor()', '+hand_touching(near_wall)', '+hand_at(Final)']
+
+28 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_touching(Init, near_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)']
+Effects: ['-fingers_flat()', '-hand_touching(near_wall)', '-hand_at(Init)', '+fingers_closed()', '+hand_at(Final)']
+
+29 Hit(Init, Intent)
+Constraints: ['hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+touch_sensor()', '+hand_touching(right_wall)', '+hand_touching(near_wall)', '+hand_at(Final)']
+
+30 MoveTo(Init, Intent)
+Constraints: ['hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_at(Intent)']
+
+31 MoveTo(Init, Intent)
+Constraints: ['hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_at(Intent)']
+
+32 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, far_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_at(Final)']
+
+33 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_touching(Init, far_wall)', 'place_touching(Init, left_wall)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(left_wall)', 'hand_touching(far_wall)']
+Effects: ['-fingers_flat()', '-hand_at(Init)', '+fingers_closed()', '+hand_at(Final)']
+
+34 MoveTo(Init, Intent)
+Constraints: ['hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_at(Final)']
+
+35 Hit(Init, Intent)
+Constraints: ['place_touching(Intent, right_wall)', 'place_touching(Init, far_wall)', 'place_touching(Intent, far_wall)', 'hand_at(Init)']
+Preconditions: ['touch_sensor()', 'fingers_moving()', 'fingers_closing()', 'fingers_closed()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)']
+Effects: ['-fingers_moving()', '-fingers_closing()', '-hand_at(Init)', '+hand_touching(right_wall)', '+hand_at(Intent)']
+
+36 Ungrasp(Init)
+Constraints: ['hand_at(Init)', 'place_touching(Init, far_wall)', 'place_touching(Init, right_wall)']
+Preconditions: ['touch_sensor()', 'fingers_moving()', 'fingers_opening()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(right_wall)', 'hand_touching(far_wall)']
+Effects: ['-fingers_moving()', '-fingers_opening()', '+fingers_flat()']
+
+37 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, right_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+touch_sensor()', '+hand_touching(right_wall)', '+hand_at(Intent)']
+
+38 Hit(Init, Intent)
+Constraints: ['place_touching(Intent, near_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+touch_sensor()', '+hand_touching(left_wall)', '+hand_at(Final)']
+
+39 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, far_wall)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_at(Final)']
+
+40 Hit(Init, Intent)
+Constraints: ['place_touching(Init, far_wall)', 'place_touching(Intent, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)']
+Effects: ['-hand_touching(far_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(left_wall)', '+hand_at(Final)']
+
+41 Hit(Init, Intent)
+Constraints: ['place_touching(Intent, left_wall)', 'place_touching(Init, right_wall)', 'hand_at(Init)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(right_wall)']
+Effects: ['-hand_touching(right_wall)', '-hand_at(Init)', '+hand_touching(left_wall)', '+hand_at(Final)']
+
+42 Hit(Init, Intent)
+Constraints: ['place_touching(Intent, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+touch_sensor()', '+hand_touching(near_wall)', '+hand_at(Final)']
+
+43 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, left_wall)', 'place_touching(Init, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)']
+Effects: ['-hand_touching(near_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(left_wall)', '+hand_touching(deepskyblue)', '+hand_at(Intent)']
+
+44 Hit(Init, Intent)
+Constraints: ['place_touching(Init, deepskyblue)', 'place_touching(Intent, deepskyblue)', 'place_near(Init, deepskyblue)', 'place_near(Intent, deepskyblue)', 'place_behind(Intent, deepskyblue, left_wall)', 'hand_at(Init)']
+Preconditions: ['grasp_sensor()', 'touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_touching(deepskyblue)']
+Effects: ['-grasp_sensor()', '-touching(left_wall, deepskyblue)', '-touching(deepskyblue, left_wall)', '-hand_at(Init)', '+touching(near_wall, deepskyblue)', '+touching(deepskyblue, near_wall)', '+hand_behind(deepskyblue, near_wall)', '+hand_at(Final)']
+
+45 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, right_wall)', 'place_touching(Init, deepskyblue)', 'place_touching(Intent, far_wall)', 'place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'hand_at(Init)', 'place_near(Init, deepskyblue)']
+Preconditions: ['touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-touching(deepskyblue, near_wall)', '-touching(near_wall, deepskyblue)', '-hand_touching(deepskyblue)', '-hand_at(Init)', '+hand_touching(right_wall)', '+hand_touching(far_wall)', '+hand_at(Intent)']
+
+46 Hit(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, far_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_touching(Init, far_wall)', 'place_touching(Intent, deepskyblue)', 'place_touching(Init, right_wall)', 'place_near(Init, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(right_wall)', 'hand_touching(far_wall)', 'hand_grasping(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_touching(right_wall)', '-hand_touching(far_wall)', '-hand_at(Init)', '+touching(near_wall, deepskyblue)', '+touching(deepskyblue, near_wall)', '+hand_at(Final)']
+
+47 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Init, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_at(Init)', '+hand_touching(deepskyblue)', '+hand_at(Intent)']
+
+48 Hit(Init, Intent)
+Constraints: ['behind_drop(Intent, deepskyblue)', 'place_touching(Init, deepskyblue)', 'place_touching(Intent, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_behind(Intent, deepskyblue, right_wall)', 'hand_at(Init)', 'place_near(Init, deepskyblue)']
+Preconditions: ['touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_behind(deepskyblue, near_wall)', '-hand_at(Init)', '+touching(left_wall, deepskyblue)', '+touching(near_wall, deepskyblue)', '+touching(deepskyblue, left_wall)', '+touching(deepskyblue, near_wall)', '+hand_at(Final)']
+
+49 Hit(Init, Intent)
+Constraints: ['place_touching(Intent, near_wall)', 'place_touching(Init, left_wall)', 'place_behind(Intent, deepskyblue, left_wall)', 'hand_at(Init)', 'place_near(Init, deepskyblue)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(left_wall)']
+Effects: ['-hand_touching(left_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(right_wall)', '+hand_touching(near_wall)', '+hand_behind(deepskyblue, left_wall)', '+hand_at(Final)']
+
+50 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_touching(Init, near_wall)', 'place_touching(Init, right_wall)', 'place_behind(Init, deepskyblue, left_wall)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(right_wall)', 'hand_touching(near_wall)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-fingers_flat()', '+fingers_closed()']
+
+51 Hit(Init, Intent)
+Constraints: ['place_touching(Init, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_touching(Init, right_wall)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)', 'place_behind(Init, deepskyblue, left_wall)']
+Preconditions: ['touch_sensor()', 'fingers_moving()', 'fingers_opening()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(right_wall)', 'hand_touching(near_wall)', 'hand_behind(deepskyblue, left_wall)']
+Effects: ['-fingers_moving()', '-fingers_opening()', '-hand_touching(right_wall)', '-hand_touching(near_wall)', '-hand_behind(deepskyblue, left_wall)', '-hand_at(Init)', '+touching(near_wall, deepskyblue)', '+touching(deepskyblue, near_wall)', '+hand_touching(left_wall)', '+hand_at(Final)']
+
+52 MoveTo(Init, Intent)
+Constraints: ['hand_at(Init)', 'place_touching(Init, left_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(left_wall)']
+Effects: ['-hand_touching(left_wall)', '-hand_at(Init)', '+hand_at(Final)']
+
+53 Ungrasp(Init)
+Constraints: ['hand_at(Init)', 'place_touching(Init, far_wall)', 'place_touching(Init, right_wall)']
+Preconditions: ['fingers_moving()', 'fingers_closing()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(right_wall)', 'hand_touching(far_wall)']
+Effects: ['-fingers_moving()', '-fingers_closing()', '+fingers_flat()']
+
+54 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, left_wall)', 'place_touching(Init, far_wall)', 'hand_at(Init)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)']
+Effects: ['-hand_touching(far_wall)', '-hand_at(Init)', '+hand_touching(left_wall)', '+hand_at(Intent)']
+
+55 MoveTo(Init, Intent)
+Constraints: ['hand_at(Init)', 'place_touching(Init, left_wall)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_at(Intent)']
+
+56 Hit(Init, Intent)
+Constraints: ['hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_at(Final)']
+
+57 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(deepskyblue, left_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, deepskyblue)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)']
+Effects: ['-hand_at(Init)', '+touch_sensor()', '+hand_touching(deepskyblue)', '+hand_at(Final)']
+
+58 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_touching(Init, deepskyblue)', 'place_touching(Intent, deepskyblue)', 'place_near(Init, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['grasp_sensor()', 'touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-grasp_sensor()', '-hand_at(Init)', '+hand_at(Final)']
+
+59 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_touching(Init, deepskyblue)', 'place_near(Init, deepskyblue)', 'place_behind(Init, deepskyblue, near_wall)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-fingers_flat()', '+grasp_sensor()', '+hand_grasping(deepskyblue)']
+
+60 MoveTo(Init, Intent)
+Constraints: ['place_touching(Intent, right_wall)', 'place_touching(Init, deepskyblue)', 'place_touching(Intent, near_wall)', 'hand_at(Init)', 'place_near(Init, deepskyblue)', 'place_behind(Init, deepskyblue, near_wall)']
+Preconditions: ['grasp_sensor()', 'touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-grasp_sensor()', '-hand_at(Init)', '+hand_touching(right_wall)', '+hand_at(Final)']
+
+61 Hit(Init, Intent)
+Constraints: ['hand_at(Init)', 'place_touching(Init, deepskyblue)', 'place_near(Init, deepskyblue)', 'place_behind(Init, deepskyblue, near_wall)']
+Preconditions: ['touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-hand_behind(deepskyblue, near_wall)', '-hand_at(Init)', '+touching(left_wall, deepskyblue)', '+touching(deepskyblue, left_wall)', '+hand_behind(deepskyblue, left_wall)', '+hand_at(Final)']
+
+62 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, left_wall)', 'place_touching(Init, deepskyblue)', 'place_touching(Intent, far_wall)', 'hand_at(Init)', 'place_near(Init, deepskyblue)']
+Preconditions: ['touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_touching(deepskyblue)']
+Effects: ['-hand_at(Init)', '+hand_behind(deepskyblue, near_wall)', '+hand_at(Final)']
+
+63 Grasp(Init)
+Constraints: ['hand_at(Init)', 'place_behind(Init, deepskyblue, near_wall)', 'place_near(Init, deepskyblue)', 'place_touching(Init, deepskyblue)', 'place_touching(Init, far_wall)']
+Preconditions: ['touch_sensor()', 'fingers_moving()', 'fingers_opening()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-fingers_moving()', '-fingers_opening()', '-hand_at(Init)', '+grasp_sensor()', '+hand_grasping(deepskyblue)', '+hand_at(Final)']
+
+64 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, far_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_touching(Init, deepskyblue)', 'place_touching(Intent, near_wall)', 'place_touching(Init, far_wall)', 'hand_at(Init)', 'place_near(Init, deepskyblue)']
+Preconditions: ['grasp_sensor()', 'touch_sensor()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(far_wall)', 'hand_touching(deepskyblue)', 'hand_grasping(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-grasp_sensor()', '-hand_touching(far_wall)', '-hand_at(Init)', '+touching(near_wall, deepskyblue)', '+touching(deepskyblue, near_wall)', '+hand_at(Final)']
+
+65 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_touching(Init, deepskyblue)', 'place_touching(Intent, deepskyblue)', 'place_near(Init, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['touch_sensor()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-touch_sensor()', '-hand_touching(deepskyblue)', '-hand_at(Init)', '+hand_at(Intent)']
+
+66 Hit(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, near_wall)', 'place_behind(Init, deepskyblue, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_moving()', 'fingers_closing()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-fingers_moving()', '-fingers_closing()', '-hand_at(Init)', '+hand_at(Final)']
+
+67 Ungrasp(Init)
+Constraints: ['hand_at(Init)', 'place_behind(Init, deepskyblue, near_wall)']
+Preconditions: ['fingers_moving()', 'fingers_opening()', 'fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_behind(deepskyblue, near_wall)']
+Effects: ['-fingers_moving()', '-fingers_opening()']
+
+68 MoveTo(Init, Intent)
+Constraints: ['place_behind(Intent, deepskyblue, near_wall)', 'place_touching(Init, near_wall)', 'place_touching(Intent, deepskyblue)', 'place_near(Intent, deepskyblue)', 'hand_at(Init)']
+Preconditions: ['fingers_flat()', 'touching(right_wall, near_wall)', 'touching(far_wall, left_wall)', 'touching(far_wall, right_wall)', 'touching(deepskyblue, near_wall)', 'touching(near_wall, deepskyblue)', 'touching(near_wall, left_wall)', 'touching(right_wall, far_wall)', 'touching(left_wall, near_wall)', 'touching(near_wall, right_wall)', 'touching(left_wall, far_wall)', 'on_table(near_wall)', 'on_table(right_wall)', 'on_table(far_wall)', 'on_table(left_wall)', 'on_table(deepskyblue)', 'hand_touching(near_wall)']
+Effects: ['-hand_touching(near_wall)', '-hand_at(Init)', '+touch_sensor()', '+hand_touching(deepskyblue)', '+hand_behind(deepskyblue, near_wall)', '+hand_at(Final)']
+

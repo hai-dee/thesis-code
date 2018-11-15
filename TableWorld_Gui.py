@@ -11,6 +11,7 @@ from Fact import Fact
 from TheAgent import The_Agent
 import SharedData as Shared
 import File_Writer
+import logging
 
 
 ####################################################################################################
@@ -45,26 +46,27 @@ data_box = None
 #the visualisation in the visualisations frame and the listeners that need to be added to the mainloop
 def initialise_window():
     global window
+
     window = Tk()
     #Initialise the main frames
     controls_frame = Frame(window)
-    
+
     right_frame = Frame(window)
-    
+
     visualisation_frame = Frame(right_frame)
     text_frame = Frame(right_frame)
-    
+
     #Position the frames in the main window
     controls_frame.grid(column=0, row=0, sticky=NW)
     right_frame.grid(column=1, row=0, sticky=NW)
     visualisation_frame.grid(column=0,row=0, sticky=NW)
     text_frame.grid(column=0, row=1, sticky=NW)
-    
+
     #Initialise the frames
     initialise_control_frame(controls_frame)
     initialise_visualisation_frame(visualisation_frame)
     initialise_text_frame(text_frame)
-    
+
     initialise_mainloop_listeners(window)
     window.mainloop()
 
@@ -76,9 +78,9 @@ def initialise_control_frame(controls_frame):
     resume_learning_button = Button(controls_frame, text="Resume Learning", command=lambda: resume_learning(resume_learning_button), width=BUTTON_WIDTH)
     resume_learning_button.grid(row=10, column=0)
     do_planning_button = Button(controls_frame, text="Resume Random Planning", command=lambda: resume_planning(do_planning_button), width=BUTTON_WIDTH)
-    do_planning_button.grid(row=11, column=0)        
+    do_planning_button.grid(row=11, column=0)
     reset_sim_button = Button(controls_frame, text="Reset Sim", command=lambda: sim_reset(), width=BUTTON_WIDTH)
-    reset_sim_button.grid(row=12, column=0)    
+    reset_sim_button.grid(row=12, column=0)
     show_example_button = Button(controls_frame, text="Show Example", command=show_next_example, width=BUTTON_WIDTH)
     show_example_button.grid(row=13, column=0)
     hack_button = Button(controls_frame, text="do hand at plan!", command=hand_at_plan, width=BUTTON_WIDTH)
@@ -86,7 +88,7 @@ def initialise_control_frame(controls_frame):
 
 
     Frame(controls_frame,  height=15).grid(row=15, column=0) #Hack to add space
-    
+
     #Label - "Planning"
     Label(controls_frame, text="Planning Controls", fg="red").grid(row=20, column=0)
     #Textbox for entering goals
@@ -97,8 +99,8 @@ def initialise_control_frame(controls_frame):
     plan_button.grid(row=30, column=0)
     constraint_test_button = Button(controls_frame, text="Get Place", command=lambda: test_constraints(text_box), width=BUTTON_WIDTH)
     constraint_test_button.grid(row=32, column=0)
-    Frame(controls_frame,  height=15).grid(row=35, column=0) #Hack to add space          
-    
+    Frame(controls_frame,  height=15).grid(row=35, column=0) #Hack to add space
+
     #Label - "Visualisation apperance"
     Label(controls_frame, text="Visualisation Controls", fg="red").grid(row=40, column=0)
     #Text output ON/OFF (Will not have this feature in the first version
@@ -108,8 +110,8 @@ def initialise_control_frame(controls_frame):
     Button(controls_frame, text="Slow down", command=slow_down, width=BUTTON_WIDTH).grid(row=60, column=0)
     vis_button = Button(controls_frame, text="Disable Vis",  command=lambda: disable_vis(vis_button), width=BUTTON_WIDTH)
     vis_button.grid(row=70, column=0)
-    Frame(controls_frame,  height=20).grid(row=75, column=0) #Hack to add space  
-    
+    Frame(controls_frame,  height=20).grid(row=75, column=0) #Hack to add space
+
     #Label - "Manual Actuators"
     Label(controls_frame, text="Manual Actuators", fg="red").grid(row=80, column=0)
     grasp_button = Button(controls_frame, text="Grasp", command=manual_grasp, width=BUTTON_WIDTH)
@@ -121,22 +123,22 @@ def initialise_control_frame(controls_frame):
     move_button = Button(controls_frame, text="MoveTo Random", command=manual_move_random, width=BUTTON_WIDTH)
     move_button.grid(row=120, column=0)
     target_entry_box = Entry(controls_frame)
-    
+
     hit_target_button = Button(controls_frame, text="Hit Target", command=lambda: manual_hit_target(target_entry_box.get()), width=BUTTON_WIDTH)
     hit_target_button.grid(row=130, column=0)
     move_target_button = Button(controls_frame, text="MoveTo Target", command=lambda: manual_move_target(target_entry_box.get()), width=BUTTON_WIDTH)
-    move_target_button.grid(row=140, column=0)    
+    move_target_button.grid(row=140, column=0)
     move_place_button = Button(controls_frame, text="MoveTo Place", command=lambda: manual_move_place(target_entry_box.get()), width=BUTTON_WIDTH)
-    move_place_button.grid(row=145, column=0) 
+    move_place_button.grid(row=145, column=0)
     target_entry_box.grid(row=150, column=0)
-    
+
     object_names_button = Button(controls_frame, text="Print Object Names", command=print_object_names, width=BUTTON_WIDTH)
     object_names_button.grid(row=160, column=0)
-    
+
 
     knowledge_button = Button(controls_frame, text="Knowledge Summary", command=knowledge_file, width=BUTTON_WIDTH)
     knowledge_button.grid(row=190, column=0)
-    
+
     print_state_button = Button(controls_frame, text="Print State", command=print_state, width=BUTTON_WIDTH)
     print_state_button.grid(row=200, column=0)
 
@@ -144,12 +146,12 @@ def initialise_control_frame(controls_frame):
 def initialise_visualisation_frame(visualisation_frame):
     global canvas
     canvas = Canvas(visualisation_frame, height=275, width=600, bg="white")
-    canvas.grid(column=1, row=0)    
-    #Draw the table outline onto the canvas 
+    canvas.grid(column=1, row=0)
+    #Draw the table outline onto the canvas
     canvas.create_line(X(Shared.LEFT_WALL), Y(Shared.FAR_WALL), X(Shared.RIGHT_WALL), Y(Shared.FAR_WALL))
     canvas.create_line(X(Shared.LEFT_WALL), Y(Shared.NEAR_WALL), X(Shared.RIGHT_WALL), Y(Shared.NEAR_WALL))
     canvas.create_line(X(Shared.LEFT_WALL), Y(Shared.FAR_WALL), X(Shared.LEFT_WALL), Y(Shared.NEAR_WALL))
-    canvas.create_line(X(Shared.RIGHT_WALL), Y(Shared.FAR_WALL), X(Shared.RIGHT_WALL), Y(Shared.NEAR_WALL))    
+    canvas.create_line(X(Shared.RIGHT_WALL), Y(Shared.FAR_WALL), X(Shared.RIGHT_WALL), Y(Shared.NEAR_WALL))
 
 def initialise_text_frame(text_frame):
     global data_box
@@ -163,8 +165,8 @@ def initialise_mainloop_listeners(window):
     window.after(500, check_for_example_to_display) #This may do weird things with the threads, it may get behind. It is only intended for the single examples mode
     #window.after(2000, __check_for_knowledge_file_generation_status) #This doesn't need to be very frequent
     window.protocol('WM_DELETE_WINDOW', exit_window) #Override default window exit behaviour
-    
-    
+
+
 ####################################################################################################
 ### CALLBACKS FOR CONTROLS
 ####################################################################################################
@@ -193,7 +195,7 @@ def resume_planning(do_planning_button):
         Shared.currently_planning = True
         do_planning_button["text"] = "Pause Random Planning"
         The_Agent().plan()
-        
+
 def fix():
     "todo"
 
@@ -239,7 +241,7 @@ def speed_up():
     time_delay -= TIME_DELAY_CHANGE
     if time_delay < MIN_TIME_DELAY:
         time_delay = MIN_TIME_DELAY
-        
+
 #Disables/ enables the visualisation. Data collection may be significantly faster with this feature disabled
 def disable_vis(vis_button):
     global canvas
@@ -261,12 +263,11 @@ def reset_vis():
     cur_state = The_Agent().controller().get_current_state().get_quantitative_state()
     Shared.currently_drawing.acquire()
     Shared.drawing_queue.put(cur_state)
-    Shared.currently_drawing.release()    
+    Shared.currently_drawing.release()
 
 #Unfortunately this isn't going to stop it from doing the learning if it is still doing that.
 #Might just want to kill the thread instead.
 def exit_window():
-    print("Exiting the window")
     Shared.playing = False
     Shared.visualisation_enabled = False
     Shared.currently_drawing.acquire()
@@ -281,14 +282,7 @@ def make_plan(text_widget):
         #Shared.currently_planning = True
         text = text_widget.get(1.0, END) #What should the parameters be?
         goals = extract_effects(text)
-        print("********")
-        for goal in goals:
-            print(goal)
-        print("********")
         The_Agent().plan_for_goals(goals)
-        #print("We are currently testing the goals true in current state code!")
-        #The_Agent().planner().test_current_state_check(goals)
-
 
 def hand_at_plan():
     goal = Fact("+hand_at", [(74, 65)])
@@ -299,42 +293,35 @@ def test_constraints(text_widget):
         #Shared.currently_planning = True
         text = text_widget.get(1.0, END) #What should the parameters be?
         constraints = extract_effects(text)
-        print("********")
-        for constraint in constraints:
-            print(constraint)
-        print("********")
         The_Agent().find_place(constraints)
-        #print("We are currently testing the goals true in current state code!")
-        #The_Agent().planner().test_current_state_check(goals)
 
 def show_next_example():
     if not Shared.currently_planning and not Shared.currently_learning and not Shared.showing_example:
-        print("doing action")
         The_Agent().show_next_example()
 
 def manual_grasp():
     if not Shared.currently_planning and not Shared.currently_learning  and not Shared.showing_example:
         The_Agent().controller().do_grasp_action()
-    
+
 def manual_ungrasp():
     if not Shared.currently_planning and not Shared.currently_learning  and not Shared.showing_example:
         The_Agent().controller().do_ungrasp_action()
-    
+
 def manual_hit_random():
     if not Shared.currently_planning and not Shared.currently_learning  and not Shared.showing_example:
-        The_Agent().controller().do_hit_action_on_random()    
-    
+        The_Agent().controller().do_hit_action_on_random()
+
 def manual_move_random():
     if not Shared.currently_planning and not Shared.currently_learning  and not Shared.showing_example:
-        The_Agent().controller().do_move_action_on_random()        
-    
+        The_Agent().controller().do_move_action_on_random()
+
 def manual_hit_target(target):
     if not Shared.currently_planning and not Shared.currently_learning  and not Shared.showing_example:
-        The_Agent().controller().do_hit_action_on_target(target)   
-    
+        The_Agent().controller().do_hit_action_on_target(target)
+
 def manual_move_target(target):
     if not Shared.currently_planning and not Shared.currently_learning  and not Shared.showing_example:
-        The_Agent().controller().do_move_action_on_target(target)   
+        The_Agent().controller().do_move_action_on_target(target)
 
 def manual_move_place(place):
     if not Shared.currently_planning and not Shared.currently_learning  and not Shared.showing_example:
@@ -348,10 +335,10 @@ def print_object_names():
     data_box.insert(END, "***Objects in the world*** \n")
     for obj in objs:
         data_box.insert(END, obj + "\n")
-    
+
 ####################################################################################################
 ### PLAN INFO READING
-#################################################################################################### 
+####################################################################################################
 def extract_effects(text):
     list_of_effects = text.split('\n')
     effect_objects = []
@@ -374,13 +361,13 @@ def check_for_state_to_draw():
         Shared.currently_drawing.notify()
         Shared.currently_drawing.release()
     window.after(time_delay, check_for_state_to_draw) #Reregister with mainloop
-    
+
 def check_for_example_to_display():
     if not Shared.examples_to_display.empty():
         example = Shared.examples_to_display.get()
         print_example_to_box(example)
     window.after(500, check_for_example_to_display)
-        
+
 ####################################################################################################
 ### DISPLAYING THE CURRENT STATE
 ####################################################################################################
@@ -399,32 +386,14 @@ def print_example_to_box(example):
         else:
             string_2 = ""
         data_box.insert(END, "%-50s %s\n" % (string_1, string_2))
-    data_box.insert(END, "\n")  
+    data_box.insert(END, "\n")
     for i in range(0, len(example.sorted_effect_strings()), 2):
         string_1 = example.sorted_effect_strings()[i]
         if i + 1 < len(example.sorted_effect_strings()):
             string_2 = example.sorted_effect_strings()[i+1]
         else:
             string_2 = ""
-        data_box.insert(END, "%-50s %s\n" % (string_1, string_2))    
-    
-    
-    #for string in example.sorted_initial_strings():
-        #if place % 2 == 0:
-            #data_box.insert(END, "\n")
-        #data_box.insert(END, string + "        ")
-        #place +=1
-    #data_box.insert(END, "\n\n")
-    #data_box.insert(END, "Effects\n")
-    #for string in example.sorted_effect_strings():
-        #if place % 2 == 0:
-            #data_box.insert(END, "\n")
-        #data_box.insert(END, string + "        ")
-        #place +=1        
-    
-   #data_box.insert(END, str(example.sorted_initial_strings()) + "\n")
-   #data_box.insert(END, str(example.sorted_effect_strings()))
-
+        data_box.insert(END, "%-50s %s\n" % (string_1, string_2))
 
 #Draws the state specified by state_snap_shot
 def display_next_state(state_snap_shot):
@@ -519,7 +488,3 @@ def get_graphics_circle_bottom_right_x(centre_x, radius):
 def get_graphics_circle_bottom_right_y(centre_y, radius):
     actual_centre_y = Shared.FAR_WALL - centre_y
     return (actual_centre_y + radius)*MAGNIFICATION_FACTOR
-
-
-
-initialise_window()

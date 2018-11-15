@@ -1,25 +1,25 @@
-from Fact import Fact
-import SharedData as Shared
 import time
 import itertools
 import copy
-from copy import deepcopy
-from collections import Counter
-#import Bound_Action
+import collections
+import logging
+
+from Fact import Fact
+import SharedData as Shared
 from MyCollections import Digraph
 import Bound_Action
 
 class Action_Rule:
 
-    cur_id = 0
+    cur_id = 0 #TODO: Refactor this into an ID generator module.
 
-    #Initialises a new action rule object, and creates an effect set for the given effects (in the form of facts)
     def __init__(self, intention, constraint_set, effect_set):
-        self.__supersets_above_threshold = False
-        #Does this action rule have any supersets that are above the threshold?
-        self.__examples_learnt_from = 0
+        #TODO: Refactor this into an ID generator module.
         self.__id = Action_Rule.cur_id
         Action_Rule.cur_id += 1
+
+        self.__supersets_above_threshold = False
+        self.__examples_learnt_from = 0
         self.__intention = intention
         self.__intention_param_type = None
         self.__intention_param = None
@@ -35,8 +35,8 @@ class Action_Rule:
                 self.__initial_param = intention.get_parameters()[0] #The initial param is always the first one
                 self.__initial_param_type = intention.get_parameters()[0].param_type()
             else:
-                print("Too many intention params??!!!")
-        self.__effect_set = effect_set #Create an effect set to hold the effects in
+                logging.warning("This intention had ", intention.get_parameters(), "parameters which was unexpetcted.")
+        self.__effect_set = effect_set
         self.__precondition_table = Precondition_Table() #Create an empty precondition table
         self.__supporting_positive_examples = {} #Examples that match the effects. Keys are Examples. Binding dictionarys are values.
         self.__unique_examples = []
@@ -68,13 +68,10 @@ class Action_Rule:
         return self.__expected_successes / (self.__expected_successes + self.__unexpected_failures)
 
     def add_expected_success(self):
-        print("recording success")
         self.__expected_successes += 2
 
     def add_unexpected_failure(self):
-        print("recording failure")
         self.__unexpected_failures += 1
-
 
     def get_effect_set(self):
         return self.effect_set()
@@ -159,8 +156,8 @@ class Action_Rule:
     #Note: This method uses heuristics to determine the best case for how many of the given goals in the goal object can be bound to the action rule
     #the more accurate the better, but it is not allowed to underestimate.
     def maximum_goals_matched(self, goal):
-        ar_predicates = Counter(self.get_effect_predicate_list())
-        goal_predicates = Counter(goal.get_list_of_predicates())
+        ar_predicates = collections.Counter(self.get_effect_predicate_list())
+        goal_predicates = collections.Counter(goal.get_list_of_predicates())
         unmatched_predicates = goal_predicates - ar_predicates
         return goal.number_of_goals() - sum(unmatched_predicates.values())
     ##
@@ -250,9 +247,7 @@ class Action_Rule:
     def maps_onto_goals(self, goals):
         goal_effect_set = Effect_Set(goals)
         result = self.__effect_set.equivalent(goal_effect_set, {})
-        print("The result is " + str(result))
         if result is None:
-            print("returning false")
             return False
         else:
             return True
@@ -321,8 +316,8 @@ class Action_Rule:
         intent2 = other.get_intention()
 
         #Check whether or not it is even possible to get successful merges
-        es1_predicates = Counter(self.get_effect_predicate_list())
-        es2_predicates = Counter(other.get_effect_predicate_list())
+        es1_predicates = collections.Counter(self.get_effect_predicate_list())
+        es2_predicates = collections.Counter(other.get_effect_predicate_list())
         left_overs_in_es1 = sum((es1_predicates - es2_predicates).values())
         if left_overs_in_es1 != 0 and left_overs_in_es1 != 1:
             return []
@@ -392,16 +387,13 @@ class Action_Rule:
                 if p_mergeless_effect_in_es1 == None:
                     p_mergeless_effect_in_es1 = e1
                 else:
-                    #print("Base case 1 triggered from trying to assign a second non merged fact")
                     return
             else:
                 #Note that the p_bindings an p_merged_effects are going to be updated by the merge_effects() method
                 if not self.__merge_effects(e1, e2, bindings, merged_effects):
-                    #print("Base case 2 triggered from bindings contradiction")
                     return #Don't do anything else on this call
         #Now figure out what should be done next
         if level == len(implicit_tree): #If we are at the lowest level
-            #print("Base case 3 triggered from a complete merged_effects")
             if p_mergeless_effect_in_es1 != None:
                 merge_less_effect_in_es2 = list(remaining_for_es2)[0]
                 new_action_rules = self.__action_rules_for_merged_effects(merged_effects, bindings, p_mergeless_effect_in_es1, merge_less_effect_in_es2)
@@ -414,9 +406,9 @@ class Action_Rule:
             next_es1_fact = es1_index[level + 1]
             for es2_fact in implicit_tree[next_es1_fact]: #What are all the facts from es2 that could map onto the es1 fact?
                 if es2_fact in remaining_for_es2: #It hasn't already been mapped elsewhere
-                    copy_of_merged_effects = deepcopy(merged_effects)
-                    copy_of_bindings = deepcopy(bindings)
-                    copy_of_remaining_for_es2 = deepcopy(remaining_for_es2)
+                    copy_of_merged_effects = copy.deepcopy(merged_effects)
+                    copy_of_bindings = copy.deepcopy(bindings)
+                    copy_of_remaining_for_es2 = copy.deepcopy(remaining_for_es2)
                     copy_of_remaining_for_es2.remove(es2_fact)
                     self.__recursively_find_merged_effects(es1_index, implicit_tree, merged_action_rules, next_es1_fact, es2_fact, copy_of_merged_effects, p_mergeless_effect_in_es1, level+1, copy_of_bindings, copy_of_remaining_for_es2)
 
@@ -450,7 +442,7 @@ class Action_Rule:
         possible_ars = []
         invalid_binding = None #Is there anyway of merging that would cause only n facts?
         if un_merged_in_es1.get_predicate() == un_merged_in_es2.get_predicate():
-            bindings_copy = deepcopy(bindings)
+            bindings_copy = copy.deepcopy(bindings)
             if self.__merge_effects(un_merged_in_es1, un_merged_in_es2, bindings_copy, []) == True:
                 invalid_binding = bindings_copy
         #What are all the unbound variables in es1?
@@ -462,7 +454,7 @@ class Action_Rule:
             if extended_bindings:
                 for extended_binding in extended_bindings:
                     if extended_binding != invalid_binding:
-                        copy_merged_effects = deepcopy(merged_effects)
+                        copy_merged_effects = copy.deepcopy(merged_effects)
                         es1_fact = un_merged_in_es1.get_specific_copy_with_dictionary(extended_binding)
                         copy_merged_effects.append(es1_fact)
                         copy_merged_effects.append(un_merged_in_es2)
@@ -506,7 +498,7 @@ class Action_Rule:
         if level != 0:
             #Process the current state
             if param2 is not None:
-                updated_binding = deepcopy(current_binding) #Only copy when we need to
+                updated_binding = copy.deepcopy(current_binding) #Only copy when we need to
                 updated_binding[param1] = param2
         #The base case
         if level == len(implicit_tree):
@@ -555,11 +547,11 @@ class Action_Rule:
                 for var_2 in vars_2:
                     #Only want to add to mapping if var_1 and var_2 are of the same type
                     if var_1.param_type() == var_2.param_type():
-                        cloned_mapping = deepcopy(current_mapping_to_extend)
+                        cloned_mapping = copy.deepcopy(current_mapping_to_extend)
                         cloned_mapping[var_1] = var_2
-                        cloned_vars_1 = deepcopy(vars_1)
+                        cloned_vars_1 = copy.deepcopy(vars_1)
                         cloned_vars_1.remove(var_1)
-                        cloned_vars_2 = deepcopy(vars_2)
+                        cloned_vars_2 = copy.deepcopy(vars_2)
                         cloned_vars_2.remove(var_2)
                         self.__get_all_possible_mappings_recursively(cloned_mapping, cloned_vars_1, cloned_vars_2, possible_mappings)
 
@@ -597,7 +589,7 @@ class Action_Rule:
                     p1 = params_in_example[i]
                     p2 = params_in_action_rule[i]
                     if p1.param_type() != p2.param_type():
-                        print("intention params are different types!")
+                        logging.warning("intention params are different types!")
                         return False
                     else:
                         mappings[p2] = p1
@@ -734,7 +726,7 @@ class Effect_Set:
     #Are the effect sets self and other equivalent? Optional parameter mappings can give additional
     #constraints, i.e. saying that certain variables in self must be mapped to certain variables in other
     def equivalent(self, other, mappings, print_debug=False):
-        return self.__effects_are_equivalent(other, mappings, print_debug)
+        return self.__effects_are_equivalent(other, mappings)
 
     def example_supports_effect_set(self, example, mappings):
         return self.__example_supports_effect_set(example, mappings)
@@ -790,32 +782,18 @@ class Effect_Set:
 
     #Returns whether or not the effects in the first effect set can be mapped onto the effects in the second
     #effect set. Mappings is any existing mappings that must be used (i.e. intention param)
-    def __effects_are_equivalent(self, other, mappings, print_debug=False):
-        print_debug = False #Turn it completely off
+    def __effects_are_equivalent(self, other, mappings):
         if self.size() != other.size(): #Make sure that the 2 effect sets have the same number of effects
             print("Lengths don't match; in a good implementation this shouldn't be triggered. Bug?")
             return None
         if self.get_index_key() != other.get_index_key(): #Make sure that the 2 effect sets have the same predicates
             print("Property names don't match; in a good implementation this shouldn't be triggered. Bug?")
             return None
-        if print_debug:
-            print("Checking for equivalence")
-            print(mappings)
         effects_in_other = other.get_effects()
         permutations = self.__generate_sorted_permutations_of_effects_in_effect_set()
-        if print_debug:
-            print("Effects in other")
-            for effect in effects_in_other:
-                print(effect)
         for permutation in permutations:
-            if print_debug:
-                print("Effects in permutation")
-                for effect in permutation:
-                    print(effect)
-            bindings = self.__effect_set_effects_equal(permutation, effects_in_other, copy.deepcopy(mappings), print_debug)
+            bindings = self.__effect_set_effects_equal(permutation, effects_in_other, copy.deepcopy(mappings))
             if bindings is not None:
-                if print_debug:
-                    print("Equivalence: " + str(bindings))
                 return bindings
         return None #No permutation seems to have matched
 
@@ -846,11 +824,8 @@ class Effect_Set:
 
     #Checks whether or not effects1 and effects2 (ordered lists) can be simply mapped onto each other in their current orderings
     #Note that as well as being used to check whether or not effect sets
-    def __effect_set_effects_equal(self, effects1, effects2, mappings, print_debug=False):
+    def __effect_set_effects_equal(self, effects1, effects2, mappings):
         equivalent_variables = mappings
-        if print_debug:
-            print("parameter: " + str(mappings))
-            print("value set" + str(set(mappings.values())))
         map_values_mapped = set(mappings.values()) #As it should be 2 way.
         for i in range(len(effects1)): #For each effect
             effect1 = effects1[i]
@@ -862,30 +837,19 @@ class Effect_Set:
                 if param1.is_var(): #The parameters are variables
                     if param1 in equivalent_variables and param2 in map_values_mapped:
                         if equivalent_variables[param1] != param2:
-                            if print_debug:
-                                print("Both mapped, not together")
                             return None #If both have already been mapped, then for equality they must be mapped to each other
                     elif (not (param1 in equivalent_variables)) and (not (param2 in map_values_mapped)): #Neither is mapped
                         if param1.param_type() == param2.param_type():
                             equivalent_variables[param1] = param2
                             map_values_mapped.add(param2)
                         else:
-                            if print_debug:
-                                print("Type contradiction")
                             return None #They are of different types, this is not a match
                     else: #Only one of them is mapped. In this case, it is impossible for them to be mapped to each other
-                        if print_debug:
-                            print("Only one mapped")
                         return None
                 else: #This is a value
                     if not param1.identifier() == param2.identifier():
-                        if print_debug:
-                            print("Unmatching values")
                         return None
         assert len(map_values_mapped) == len(set(equivalent_variables.values()))
-        if print_debug:
-            print("Should have returned okay")
-            print(map_values_mapped)
         return map_values_mapped
     #self.__latest_bindings = equivalent_variables #Because more than one algorithm uses this code. Changing the return type would be problematic
 
@@ -1296,4 +1260,3 @@ class Action_Rule_Connection_Rater():
 
         def get_fact(self):
             return self.__fact
-
