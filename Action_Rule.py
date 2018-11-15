@@ -4,9 +4,10 @@ import copy
 import collections
 import logging
 
+from utils.graph import Digraph
+
 from Fact import Fact
 import SharedData as Shared
-from MyCollections import Digraph
 import Bound_Action
 
 class Action_Rule:
