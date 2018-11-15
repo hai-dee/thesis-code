@@ -1,0 +1,31 @@
+1
++hand_grasping ?o1
+1
++touching ?o1 ?o2
+2
++hand_touching ?w1
++hand_touching ?w2
+1
++touching ?o1 ?w1
+1
++touching ?o1 left_wall
+1
++touching ?o1 far_wall
+1
++touching ?o1 near_wall
+1
++touch_sensor
+1
++grasp_sensor
+2
++touching ?o1 ?w1
++touch_sensor
+1
++fingers_flat
+2
+hand_touching ?o1
+hand_touching ?o2
+3
+hand_touching ?o1
+hand_touching ?o2
+hand_grasping ?o1
