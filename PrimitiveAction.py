@@ -53,23 +53,9 @@ class Primitive_Action:
         self.__number_of_rules = 0
         self.__counts = Counter()
 
-
-    #####################################################################################################
-    ### PUBLIC INTERFACE FOR PRIMITIVE ACTION
-    #####################################################################################################
-
-    #####################################################################################################
-    ### LEARNING ########################################################################################
-    #####################################################################################################
-
     #Update the knowledge in this primitive action using the given example
     def learn_from_example(self, example):
         self.__learn_from_example(example)
-
-
-    #####################################################################################################
-    ##### DATA RETRIEVAL ################################################################################
-    #####################################################################################################
 
     #Taken from the python documentation
     def powerset(self, iterable):
@@ -489,17 +475,6 @@ class Effect_Set_Node:
 
     def var_count(self):
         return len(set(list(self.get_effect_set().get_all_var_params()) + list(self.get_intention().get_parameters())))
-
-    ##Definition: The effect set has at least 5 supporting examples
-    #def has_sufficient_support(self):
-        #return self.get_support() >= Shared.MIN_ES_SUPPORT_FOR_PLANNING
-
-    ##Definiton: At least one action rule returned true
-    #def has_good_action_rules(self):
-        #for ar in self.get_action_rules():
-            #if ar.score_for_bindings() >= 0.5 and ar.unique_support() >= Shared.MIN_AR_SUPPORT_FOR_PLANNING:
-                #return True
-        #return False
 
     def best_action_rule_score(self):
         if self.get_action_rules():

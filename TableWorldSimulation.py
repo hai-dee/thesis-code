@@ -66,11 +66,9 @@ PROB_OF_HIT = PROB_OF_MOVE + 0.35 #normally 0.35
 PROB_OF_GRASP_NOT_NEAR = PROB_OF_HIT + 0.15 #normally 0.15
 PROB_OF_UNGRASP_NOT_HOLDING = 1
 
-
-#Probabilities for differet 
+#Probabilities for differet
 PROB_TARGET_WALL = 0.4
 PROB_TARGET_OBJ = 1 - PROB_TARGET_WALL
-
 
 #Used for selecting a place
 PROB_PLACE_TOUCHING_WALL = 0.3 #normally 0.3
@@ -81,13 +79,7 @@ PROB_PLACE_RANDOM = PROB_PLACE_SPECIAL_ALIGN + 0.3
 
 class TableWorldSimulation:
 
-################################################################################################
-### PUBLIC INTERFACE TO TABLEWORLDSIMULATION
-################################################################################################
-
     def __init__(self):
-
-        #Data required for the basic simulation
         self.__hand_force_y = 0
         self.__hand_force_x = 0
         self.__hand_chance_force_x = 0
@@ -115,8 +107,6 @@ class TableWorldSimulation:
         self.__current_action_string = None
         self.__final_x = None
         self.__final_y = None
-
-        #Data required for actions
         self.__time_since_grasp = 0 # How long ago was the last grasp?
         self.__target_x = None #Target x of the current move or hit action
         self.__target_y = None #Target y of the current move or hit action
@@ -128,12 +118,10 @@ class TableWorldSimulation:
         self.__count_stopped = 0
         self.__low_velocity_limit = 1.5
         self.__hit_action_past_target = False
-        
         self.__start_of_action_x = None
         self.__start_of_action_y = None
 
     def reset(self):
-        #Data required for the basic simulation
         self.__hand_force_y = 0
         self.__hand_force_x = 0
         self.__hand_chance_force_x = 0
@@ -162,8 +150,6 @@ class TableWorldSimulation:
         self.__current_action_string = None
         self.__final_x = None
         self.__final_y = None
-
-        #Data required for actions
         self.__time_since_grasp = 0 # How long ago was the last grasp?
         self.__target_x = None #Target x of the current move or hit action
         self.__target_y = None #Target y of the current move or hit action
@@ -175,10 +161,9 @@ class TableWorldSimulation:
         self.__count_stopped = 0
         self.__low_velocity_limit = 1.5
         self.__hit_action_past_target = False
-        
         self.__start_of_action_x = None
         self.__start_of_action_y = None
-        
+
 
     def get_next_example(self):
         states_in_example = [] #List of State objects in this example
@@ -186,7 +171,7 @@ class TableWorldSimulation:
         action_param = None
         previous_state = None
         currently_recording_action = False
-        while(True): #Easier to just break out of the forever loop...
+        while(True):
             self.__set_actuators()
             self.__compute_new_state()
             cur_state = self.__make_state_object()
@@ -232,140 +217,129 @@ class TableWorldSimulation:
                 action_name = None
                 action_param = None
                 previous_state = None
-                currently_recording_action = False                
+                currently_recording_action = False
             previous_state = cur_state #Because when the action starts, we will need this
-            
+
     def __reset_place_variables(self):
         self.__final_x = None
         self.__final_y = None
         self.__target_x = None
         self.__target_y = None
         self.__start_of_action_x = None
-        self.__start_of_action_y = None                         
-            
+        self.__start_of_action_y = None
 
     def get_current_state(self):
         return self.__make_state_object()
-    
-    
-    #def do_move_action(self, target):
-        
-    #def do_hit_action(self, target):
-        
+
     def do_grasp_action(self):
         self.__choose_grasp_action() #Set the actuators for a grasp action
         while self.__current_action == "Grasp":
             self.__set_actuators_action()
             self.__compute_new_state()
             if Shared.visualisation_enabled:
-                cur_state = self.__make_state_object() 
+                cur_state = self.__make_state_object()
                 Shared.currently_drawing.acquire()
                 Shared.drawing_queue.put(cur_state)
                 Shared.currently_drawing.wait()
                 Shared.currently_drawing.release()
-                
+
     def do_ungrasp_action(self):
         self.__choose_ungrasp_action() #Set the actuators for a grasp action
         while self.__current_action == "Ungrasp":
             self.__set_actuators_action()
             self.__compute_new_state()
             if Shared.visualisation_enabled:
-                cur_state = self.__make_state_object() 
+                cur_state = self.__make_state_object()
                 Shared.currently_drawing.acquire()
                 Shared.drawing_queue.put(cur_state)
                 Shared.currently_drawing.wait()
-                Shared.currently_drawing.release()        
-    
+                Shared.currently_drawing.release()
+
     def do_move_action_on_random(self):
         self.__choose_move_action() #Set the actuators for a move action
         while self.__current_action == "MoveTo":
             self.__set_actuators_action()
             self.__compute_new_state()
             if Shared.visualisation_enabled:
-                cur_state = self.__make_state_object() 
+                cur_state = self.__make_state_object()
                 Shared.currently_drawing.acquire()
                 Shared.drawing_queue.put(cur_state)
                 Shared.currently_drawing.wait()
                 Shared.currently_drawing.release()
-                
+
     def do_hit_action_on_random(self):
-        print("doing hit on random")
         self.__choose_hit_action() #Set the actuators for a hit action
         while self.__current_action == "Hit":
             self.__set_actuators_action()
             self.__compute_new_state()
             if Shared.visualisation_enabled:
-                cur_state = self.__make_state_object() 
+                cur_state = self.__make_state_object()
                 Shared.currently_drawing.acquire()
                 Shared.drawing_queue.put(cur_state)
                 Shared.currently_drawing.wait()
-                Shared.currently_drawing.release()        
-    
+                Shared.currently_drawing.release()
+
     def do_hit_action(self, target):
-        print("doing hit on " + str(target))
         if self.__set_action_target(target): #This will be false if the target does not exist, or if for any other reason it can't be set
             self.__choose_hit_action_with_set_target()
             while self.__current_action == "Hit":
                 self.__set_actuators_action()
                 self.__compute_new_state()
                 if Shared.visualisation_enabled:
-                    cur_state = self.__make_state_object() 
+                    cur_state = self.__make_state_object()
                     Shared.currently_drawing.acquire()
                     Shared.drawing_queue.put(cur_state)
                     Shared.currently_drawing.wait()
-                    Shared.currently_drawing.release()                  
-   
+                    Shared.currently_drawing.release()
+
     def do_move_action(self, target):
-        print("doing move on " + str(target))
         if self.__set_action_target(target): #This will be false if the target does not exist, or if for any other reason it can't be set
             self.__choose_move_action_with_set_target()
             while self.__current_action == "MoveTo":
                 self.__set_actuators_action()
                 self.__compute_new_state()
                 if Shared.visualisation_enabled:
-                    cur_state = self.__make_state_object() 
+                    cur_state = self.__make_state_object()
                     Shared.currently_drawing.acquire()
                     Shared.drawing_queue.put(cur_state)
                     Shared.currently_drawing.wait()
-                    Shared.currently_drawing.release()          
-    
+                    Shared.currently_drawing.release()
+
     def do_move_to_place(self, place):
-        print("Doing move to " + str(place))
         self.__set_move_place(place)
         self.__choose_move_action_with_set_target()
         while self.__current_action == "MoveTo":
             self.__set_actuators_action()
             self.__compute_new_state()
             if Shared.visualisation_enabled:
-                cur_state = self.__make_state_object() 
+                cur_state = self.__make_state_object()
                 Shared.currently_drawing.acquire()
                 Shared.drawing_queue.put(cur_state)
                 Shared.currently_drawing.wait()
-                Shared.currently_drawing.release()             
-    
+                Shared.currently_drawing.release()
+
     def do_hit_to_place(self, place):
-        print("Doing hit on " + str(place))
         self.__set_move_place(place)
         self.__choose_hit_action_with_set_target()
         while self.__current_action == "Hit":
             self.__set_actuators_action()
             self.__compute_new_state()
             if Shared.visualisation_enabled:
-                cur_state = self.__make_state_object() 
+                cur_state = self.__make_state_object()
                 Shared.currently_drawing.acquire()
                 Shared.drawing_queue.put(cur_state)
                 Shared.currently_drawing.wait()
-                Shared.currently_drawing.release()             
-    
+                Shared.currently_drawing.release()
+
     def objects_currently_in_world(self):
         return self.__objects
-    
+
     def names_currently_in_the_world(self):
         object_names = set([obj.name for obj in self.__objects if obj.on_table()])
         wall_names =  set(["left_wall", "right_wall", "near_wall", "far_wall"])
         return object_names | wall_names
-    
-    
+
+
     def __complete_action(self):
         "todo this refactored support method"
 
@@ -815,15 +789,15 @@ class TableWorldSimulation:
 
     #Todo: Investigate why there appears to be dead code in this method
     def __set_actuators(self):
-        
+
         ####These lines of code seem to be redundant #####
         old_fx = self.__hand_force_x
         old_fy = self.__hand_force_y
         old_ff = self.__finger_force
         ##################################################
-        
+
         ##this is where the new code goes
-        
+
         #This is where the stuff for setting the mouse forces went, but because this feature has been disabled, not bothering with that code
         if not self.__current_action and random() < PROB_OF_START_ACTION: #Start a new action...
             self.__choose_new_action()
@@ -834,8 +808,8 @@ class TableWorldSimulation:
             self.__set_actuators_random() #Just do some random behaviour
         else:
             self.__set_actuators_action() #Continue the current action
-        ## end of new bit of code            
-        
+        ## end of new bit of code
+
         ####These lines of code seem to be redundant #####
         self.__hand_chance_force_x = self.__hand_force_x - old_fx
         self.__hand_chance_force_y = self.__hand_force_y - old_fy
@@ -882,7 +856,7 @@ class TableWorldSimulation:
                 self.__hand_force_y = 0
             if abs(self.__hand_vel_x) < 0.5 and abs(self.__hand_vel_y) < 0.5:
                 #Very low velocity so just set to a random force
-                self.__hand_force_x = self.__bound(gauss(0,MAX_FORCE / 2), -MAX_FORCE, MAX_FORCE) 
+                self.__hand_force_x = self.__bound(gauss(0,MAX_FORCE / 2), -MAX_FORCE, MAX_FORCE)
                 self.__hand_force_y = self.__bound(gauss(0,MAX_FORCE / 2), -MAX_FORCE, MAX_FORCE)
         #Do random grasp actions based on probabilities
         self.__time_since_grasp += 1
@@ -913,10 +887,10 @@ class TableWorldSimulation:
             return val
 
 
-    def __reset_action_state(self):          
+    def __reset_action_state(self):
         self.__current_action = None
         self.__target_name = None
-        self.__current_action_string = None        
+        self.__current_action_string = None
 
 
 ### SET THE ACUTATORS FOR A MOVE ACTION ###
@@ -986,7 +960,7 @@ class TableWorldSimulation:
         dist = hypot(dx, dy)
         if (self.__hand_past_target(dx, dy, dist) and self.__hand_vel_x == 0 and self.__hand_vel_y == 0) or self.__hand_stuck(dist):
             self.__log_to_data_file("Ending " + self.__current_action_string + "\n")
-            self.__reset_action_state()      
+            self.__reset_action_state()
         else:
             t_speed = 0
             if not self.__hit_action_past_target:
@@ -1088,12 +1062,12 @@ class TableWorldSimulation:
             self.__current_action_string = "MoveTo("+str(self.__target_name)+")"
             self.__end_radius = 30
             self.__target_speed = 30
-    
+
     def __choose_move_action_with_set_target(self):
         self.__current_action = "MoveTo"
         self.__current_action_string = "MoveTo("+str(self.__target_name)+")"
         self.__end_radius = 30
-        self.__target_speed = 30        
+        self.__target_speed = 30
 
 
     def __choose_hit_action(self):
@@ -1107,7 +1081,7 @@ class TableWorldSimulation:
         self.__current_action = "Hit"
         self.__current_action_string = "Hit("+str(self.__target_name)+")"
         self.__hit_action_past_target = False
-        self.__target_speed = 60        
+        self.__target_speed = 60
 
     def __choose_grasp_action(self):
         self.__target_obj = None
@@ -1163,7 +1137,7 @@ class TableWorldSimulation:
         return True
 
 
-    #Currently a prototype version, it just keeps searching (using a recursive loop) 
+    #Currently a prototype version, it just keeps searching (using a recursive loop)
     def __choose_place_target(self):
         current_state = self.__make_state_object()
         self.__place = None
@@ -1183,9 +1157,9 @@ class TableWorldSimulation:
                 self.__target_y = y
                 self.__target_name = (x,y)
                 self.__target_dir = atan2(self.__target_y - self.__hand_pos_y, self.__target_x - self.__hand_pos_x)
-                return True            
+                return True
         elif choice <PROB_PLACE_SPECIAL_ALIGN:
-            print("Not yet implemented")
+            print("Special align is not yet implemented")
         elif choice <PROB_PLACE_RANDOM:
             (x, y) = Simulated_Vision.get_random_place(current_state)
             self.__target_x = x
@@ -1200,13 +1174,13 @@ class TableWorldSimulation:
     def __set_action_target(self, target):
         if target == "near_wall":
             self.__target_x = (LEFT_WALL + RIGHT_WALL)/2
-            self.__target_y = NEAR_WALL + HAND_RAD            
+            self.__target_y = NEAR_WALL + HAND_RAD
         elif target == "far_wall":
             self.__target_x = (LEFT_WALL + RIGHT_WALL)/2
-            self.__target_y = FAR_WALL - HAND_RAD            
+            self.__target_y = FAR_WALL - HAND_RAD
         elif target == "left_wall":
             self.__target_x = LEFT_WALL + HAND_RAD
-            self.__target_y = (FAR_WALL + NEAR_WALL) / 2            
+            self.__target_y = (FAR_WALL + NEAR_WALL) / 2
         elif target == "right_wall":
             self.__target_x = RIGHT_WALL - HAND_RAD
             self.__target_y = (FAR_WALL + NEAR_WALL)/2
@@ -1217,7 +1191,7 @@ class TableWorldSimulation:
             dist = hypot(dist_x, dist_y)
             self.__target_x = target_obj.x - (OBJ_RAD + HAND_RAD) * dist_x / dist
             self.__target_y = target_obj.y - (OBJ_RAD + HAND_RAD) * dist_y / dist
-            self.__target_obj = target_obj            
+            self.__target_obj = target_obj
         else:
             return False
         self.__target_dir = atan2(self.__target_y - self.__hand_pos_y, self.__target_x - self.__hand_pos_x)
@@ -1225,7 +1199,6 @@ class TableWorldSimulation:
         return True
 
     def __set_move_place(self, place):
-        print(place)
         place_x, place_y = place
         self.__target_x = place_x
         self.__target_y = place_y

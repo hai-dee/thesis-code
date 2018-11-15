@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter.filedialog import * #Import the stuff for nice file saving
-
 from threading import Thread
 from queue import Queue
 from time import sleep
@@ -11,7 +10,6 @@ from Fact import Fact
 from TheAgent import The_Agent
 import SharedData as Shared
 import File_Writer
-import logging
 
 
 ####################################################################################################
