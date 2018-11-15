@@ -397,7 +397,7 @@ class AgentPlanner:
                         next_item.bind_random_object_to_intention()
                     The_Agent().controller().carry_out_bound_action(next_item)
                     actions_used.append(next_item)
-                    
+
         #Do a final check to see if this has actually worked or not.
         unsatisfied_goals, mapping = self.map_goals_onto_current_state(goals, The_Agent().controller().get_current_state())
         print("FINISHING PLAN")
