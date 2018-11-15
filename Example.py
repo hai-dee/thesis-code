@@ -19,7 +19,7 @@ class Qualitative_Example:
         self.__id_num = Qualitative_Example.__next_example_id
         Qualitative_Example.__next_example_id += 1
         #What was the agent trying to do?
-        
+
         #This mess all refers to the intention. Best to not modify it in any way to be safe
         self.__action_name = action #I.e. move, hit, grasp, or ungrasp
         if target:
@@ -30,13 +30,13 @@ class Qualitative_Example:
             self.__qual_init_param = "Init"
             self.__raw_intent_param = None
             self.__qual_intent_param = None
-        
-        
+
+
         self.__intention = Fact(action, [self.__qual_init_param, self.__qual_intent_param])
-                
+
         self.__quant_states = quantitative_states #Might not want to save this, as it is unnecessary, although useful for debugging
-        
-        self.__initialise_qualitative_data() #Generate the qualitative representation of this example        
+
+        self.__initialise_qualitative_data() #Generate the qualitative representation of this example
         #Currently it is only going to initialise the effects that it can identify by only looking at the first and last states.
 
     def __str__(self):
@@ -50,41 +50,29 @@ class Qualitative_Example:
     def sorted_effect_strings(self):
         effect_strings = [str(x) for x in self.get_effect_facts()]
         return sorted(effect_strings)
-        
+
     def sorted_initial_strings(self):
         initial_strings = [str(x) for x in self.get_initial_facts()]
         return sorted(initial_strings)
-    
+
     def intention_param_string(self):
         return str(self.get_intention_fact())
 
-####################################################################################################
-### PUBLIC INTERFACE TO EXAMPLE
-####################################################################################################
     #Returns the fact that corresponds to the agent's intention
     def get_intention_fact(self):
         return self.__intention
 
-    def get_intention_param_type(self):
-        if len(self.__intention.get_parameters()) > 0:
-            return self.__intention.get_parameters()[0].param_type()
-
     def get_intention_params(self):
         return self.__intention.get_parameters()
 
-    def get_intention_param(self):
-        if len(self.__intention.get_parameters()) > 0:
-            return self.__intention.get_parameters()[0]
-
     def get_initial_facts(self):
         return self.__extract_facts(self.__initial_state_dict)
-    
+
     def get_effect_facts(self):
         return self.__extract_facts(self.__effects_dict)
 
     def get_constraints(self):
         return self.__extract_facts(self.__constraints_dict)
-
 
     #Get a list of the constraints in this example that only contain the given params
     def constraints_with_params(self, params):
@@ -101,10 +89,6 @@ class Qualitative_Example:
     #What was the agent trying to accomplish?
     def get_action(self):
         return self.__action_name
-        
-    #Incase we need to be able to replay the example
-    def get_quant_states(self):
-        return self.__quant_states
 
     #Returns a set of all effects that have the given predicate
     #Return an empty set if the predicate can't be found
@@ -113,17 +97,7 @@ class Qualitative_Example:
             return self.__effects_dict[predicate]
         else:
             return set()
-    
-    #Useful for debugging purposes
-    def print_all_effects(self):
-        effects = self.get_effects()
-        string_list = []
-        for effect in effects:
-            string_list.append(effect.string_representation())
-        
-####################################################################################################
-### PRIVATE HELPER METHODS
-####################################################################################################      
+
     #This method extracts facts out of the dictionary form so that the public methods can return a linear
     #list of the facts
     def __extract_facts(self, dict_of_facts):
@@ -191,9 +165,9 @@ class Qualitative_Example:
         qual_state = Qualitative_State(quant_state)
         standard_facts =  qual_state.get_qualitative_facts()
         return self.__make_dictionary_for_qual_facts(standard_facts)
-    
 
-    
+
+
     #What did this example result in?
     def __effects_dict(self):
         #Get the initial state facts [again to speed up code writing time, will optimise this if the memory usage is too painful]
@@ -201,77 +175,16 @@ class Qualitative_Example:
         hand_at_fact_init = Fact("hand_at", ["Init"])
         init_state_facts = init_qual_state.get_qualitative_facts() + [hand_at_fact_init]
         initial_dict = self.__make_dictionary_for_qual_facts(init_state_facts)
-        
+
         #Need to make a combined constraints-initial dict
         #Now build up the effects dict
         qual_state = Qualitative_State(self.__quant_states[-1])
-        final_state_facts = qual_state.get_qualitative_facts()   
+        final_state_facts = qual_state.get_qualitative_facts()
         hand_at_fact_final = None
         #Probably very bug prone...
         hand_at_fact_final = Fact("hand_at", [self.__qualitative_places["Final"][1]])
         final_dict = self.__make_dictionary_for_qual_facts(final_state_facts + [hand_at_fact_final])
-        return self.__generate_state_difference_dictionary(initial_dict, final_dict)    
-    
-    
-    ##What did this example result in?
-    #def __effects_dict_old(self):
-        ##Get the initial state facts [again to speed up code writing time, will optimise this if the memory usage is too painful]
-        #init_qual_state = Qualitative_State(self.__quant_states[0])
-        #init_intent_facts = []
-        #init_init_facts = []
-        #if "Intent" in self.__qualitative_places:
-            #init_intent_facts = init_qual_state.facts_for_place(self.__qualitative_places["Intent"])
-        #if "Init" in self.__qualitative_places:
-            #init_init_facts = init_qual_state.facts_for_place(self.__qualitative_places["Init"]) #Weird name... oh well...
-        #if "Final" in self.__qualitative_places: #While these facts are not in init, I don't want them flooding the effects
-            #init_final_facts = init_qual_state.facts_for_place(self.__qualitative_places["Final"])
-        #init_state_facts = init_qual_state.get_qualitative_facts() + init_intent_facts + init_init_facts + init_final_facts
-        #initial_dict = self.__make_dictionary_for_qual_facts(init_state_facts)
-        ##Need to make a combined constraints-initial dict
-        ##Now build up the effects dict
-        #qual_state = Qualitative_State(self.__quant_states[-1])
-        #final_state_facts = qual_state.get_qualitative_facts()   
-        #during_action_facts = self.__effects_during_action()
-        #if "Intent" in self.__qualitative_places:
-            #intent_place_facts = qual_state.facts_for_place(self.__qualitative_places["Intent"])
-        #else:
-            #intent_place_facts = []
-        #initial_place_facts = qual_state.facts_for_place(self.__qualitative_places["Init"])
-        #final_place_facts = qual_state.facts_for_place(self.__qualitative_places["Final"])
-        #final_dict = self.__make_dictionary_for_qual_facts(final_state_facts + intent_place_facts + initial_place_facts + final_place_facts)
-        #return self.__generate_state_difference_dictionary(initial_dict, final_dict)
-
-    #Works out all the qual facts for a state, and then puts them in a dictionary and returns it
-    def __qual_dict_for_state(self, quant_state):
-        qual_facts_list = Qualitative_State(quant_state).get_qualitative_facts()
-        dictionary = self.__make_dictionary_for_qual_facts(qual_facts_list)
-        return dictionary
-
-    #Generates a list of all the effects that happened during the action. These are special cases in that they aren't from the initial state or final state.
-    #It seems that at this stage, it makes no sense to have the "existance" part of the predicate, as they are events rather than things that were different at the start and end
-    def __effects_during_action(self):
-        event_effects_list = []
-        touch_sensed_event = False
-        sound_sensed_event = False
-        grip_sensed_event = False
-        for i in range(1, len(self.__quant_states)):
-            if touch_sensed_event and sound_sensed_event and grip_sensed_event:
-                break #No point checking any further
-            current_state  = self.__quant_states[i]
-            previous_state = self.__quant_states[i - 1]
-            #Check for touch sensor event
-            if  (not touch_sensed_event) and current_state.touch == True and previous_state.touch == False:
-                touch_sensor_event = True
-                event_effects_list.append(Fact("touch_sensor_event", None))
-            #Check for sound sensor event
-            if (not sound_sensed_event) and current_state.sound == True and previous_state.sound == False:
-                sound_sensor_event = True
-                event_effects_list.append(Fact("sound_sensor_event", None))
-            #Check for grip sensor event
-            if (not grip_sensed_event) and current_state.grip == True and previous_state.grip == False:
-                grip_sensor_event = True
-                event_effects_list.append(Fact("grip_sensor_event", None))
-        return event_effects_list
+        return self.__generate_state_difference_dictionary(initial_dict, final_dict)
 
     #Seperating this out, because I think it will make the code easier to read
     def __make_dictionary_for_qual_facts(self, qual_facts):

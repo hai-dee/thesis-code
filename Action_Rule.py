@@ -1,4 +1,3 @@
-import time
 import itertools
 import copy
 import collections
@@ -19,22 +18,18 @@ class Action_Rule:
         self.__id = Action_Rule.cur_id
         Action_Rule.cur_id += 1
 
-        self.__supersets_above_threshold = False
         self.__examples_learnt_from = 0
         self.__intention = intention
         self.__intention_param_type = None
         self.__intention_param = None
         self.__initial_param = None
-        self.__initial_param_type = None
         if intention.get_parameters():
             if len(intention.get_parameters()) == 2:
                 self.__intention_param = intention.get_parameters()[1] #The intention param is always the second one
                 self.__initial_param = intention.get_parameters()[0] #The initial param is always the first one
                 self.__intention_param_type = intention.get_parameters()[1].param_type()
-                self.__initial_param_type = intention.get_parameters()[0].param_type()
             elif len(intention.get_parameters()) == 1:
                 self.__initial_param = intention.get_parameters()[0] #The initial param is always the first one
-                self.__initial_param_type = intention.get_parameters()[0].param_type()
             else:
                 logging.warning("This intention had ", intention.get_parameters(), "parameters which was unexpetcted.")
         self.__effect_set = effect_set
@@ -49,8 +44,6 @@ class Action_Rule:
         #PLANNING EVALUATION
         self.__expected_successes = 10
         self.__unexpected_failures  = 10
-        self.__unexpected_successes = 0
-        self.__expected_failures = 0
 
 
     ########################################################################################################################
@@ -84,15 +77,6 @@ class Action_Rule:
     def get_id(self):
         return self.__id
 
-    def vars_in_effects(self):
-        return self.__effect_set.get_all_var_params()
-
-    def vars_in_intention(self):
-        return self.__intention.get_parameters()
-
-    def vars_in_ar(self):
-        return set(list(self.vars_in_effects()) + list(self.vars_in_intention()))
-
     def score_for_bindings(self):
         return Action_Rule_Connection_Rater(self).get_connection_rating()
 
@@ -101,9 +85,6 @@ class Action_Rule:
 
     def has_intention_params(self):
         return bool(self.__intention_param)
-
-    def get_set_of_vars(self):
-        return self.__effect_set.get_all_var_params() | self.__intention.get_all_var_params() #checked
 
     def get_constraint_set(self):
         return self.__constraints
@@ -119,24 +100,9 @@ class Action_Rule:
     def above_support_threshold(self):
         return self.__examples_learnt_from >= Shared.MIN_ES_SUPPORT_TO_COMBINE
 
-    #Does this example have at least a certain percentage of supporting examples that aren't
-    #also support of supersets?
-    def above_unique_support_thresold(self):
-        if self.__supersets_above_threshold:
-            return self.unique_support() / self.support() >= Shared.MINIMUM_THRESHOLD_FOR_UNIQUE_SUPPORT
-        else:
-            return self.support() >= Shared.RELIABLE_FOR_PLANNING_THRESHOLD
-
-    #The planner only cares about action rules with good enough support!
-    def has_reliable_support(self):
-        return self.support() >= Shared.RELIABLE_FOR_PLANNING_THRESHOLD
-
     #What is the agent attempting to accomplish when this action rule occurs?
     def get_intention(self):
         return self.__intention #checked
-
-    def initial_param(self):
-        return self.__initial_param
 
     def intention_param(self):
         return self.__intention_param
@@ -144,28 +110,11 @@ class Action_Rule:
     def intention_param_type(self):
         return self.__intention_param_type
 
-
     def get_reliable_preconditions(self):
         return self.__precondition_table.get_reliable_preconditions()
 
-    #######################################################################################################################
-    #### USED BY THE PLANNER
-    ##
     def get_effect_predicate_list(self):
         return self.__effect_set.get_predicate_list()
-    ##
-    #Note: This method uses heuristics to determine the best case for how many of the given goals in the goal object can be bound to the action rule
-    #the more accurate the better, but it is not allowed to underestimate.
-    def maximum_goals_matched(self, goal):
-        ar_predicates = collections.Counter(self.get_effect_predicate_list())
-        goal_predicates = collections.Counter(goal.get_list_of_predicates())
-        unmatched_predicates = goal_predicates - ar_predicates
-        return goal.number_of_goals() - sum(unmatched_predicates.values())
-    ##
-    ##
-    ##
-    #######################################################################################################################
-
 
     #Gets the effects this action rule is trying to learn preconditions for
     def get_effects(self):
@@ -174,14 +123,9 @@ class Action_Rule:
     def get_constraints(self):
         return list(self.__constraints.get_constraints())
 
-    #Note that there is no extra cost for calling this as well as add_example() as I have used caching
-    def example_supports_action_rule(self, example):
-        return self.__example_supports_action_rule(self, example)
-
     def summary(self):
         intention_string = str(self.get_intention())
         precondition_strings = self.get_precondition_strings()
-        non_precondition_strings = ""
         constraint_strings = [str(x) for x in self.get_constraints()]
         effect_strings = [str(x) for x in self.get_effects()]
         return "Intention " + intention_string + "\nConstraints: " + str(constraint_strings) + "\nPreconditions: " + str(precondition_strings) + "\nEffects: " + str(effect_strings) + "\n" + "ID " + str(self.get_id()) + " | Quality " + str(self.quality_score()) + " | Unique Support: " + str(self.unique_support()) + "/" + str(self.support()) + "\n"
@@ -191,10 +135,6 @@ class Action_Rule:
         example_positive = self.__learn_from_example(example)
         return example_positive
 
-    #Are both these action rules learning the same thing? (i.e. are the intention and effects the same)
-    def is_equivalent(self, other):
-        return self.__action_rules_are_equivalent(other)
-
     #A key to identify this action rule in the index
     def index_key(self):
         return self.__effect_set.get_index_key()
@@ -202,12 +142,6 @@ class Action_Rule:
     #The size of an action rule is how many effects it contains?
     def size(self):
         return self.__effect_set.size()
-
-    def positive_example_ids(self):
-        ids = []
-        for example in self.__supporting_positive_examples:
-            ids.append(example.get_example_id())
-        return ids
 
     #Used for nice file output...
     def get_effect_strings(self):
@@ -230,20 +164,6 @@ class Action_Rule:
     def get_combined_action_rules(self, other):
         return self.__get_combined_action_rules_of_size(other, self.size() + 1)
 
-
-    def preconditions_match(self, current_state, goals):
-        "todo"
-
-    @staticmethod
-    def generate_size_1_action_rules(example):
-        action_rules = []
-        intention_fact = example.get_intention_fact()
-        for effect in example.get_effect_facts():
-            [[gen_intention_fact], gen_effect] = Fact.generalise_list_of_facts([[intention_fact], [effect]])
-            new_ar = Action_Rule(gen_intention_fact, None, Effect_Set(gen_effect))
-            action_rules.append(new_ar)
-        return action_rules
-
     #goals is a list of effects.
     def maps_onto_goals(self, goals):
         goal_effect_set = Effect_Set(goals)
@@ -252,12 +172,6 @@ class Action_Rule:
             return False
         else:
             return True
-
-    ########################################################################################################################
-    ### Public methods that assist the planner
-    ########################################################################################################################
-    def best_action_rule_to_goals_mapping(self, agent_goal):
-        return self.__effect_set.best_way_to_bind_goals_to_effects(agent_goal)
 
     #We don't want bound action rules that bind a subset of the goals that another binds.
     #I think this will only return the better bindings
@@ -278,22 +192,12 @@ class Action_Rule:
             prev_perm = perm
         return bound_rules
 
-    def get_possible_bindings(self, goals):
-        permutations = self.__effect_set.find_possible_effect_permutations_for_goals(goals.get_goals_sorted_by_predicate())
-
-    ########################################################################################################################
-    ### VARIOUS STRING OUTPUT METHODS FOR ACTION RULE (USEFUL FOR DATA FILE GENERATION)
-    ########################################################################################################################
 
     def get_effect_strings(self):
         effect_strings = []
         for effect in self.get_effects():
             effect_strings.append(effect.string_representation())
         return effect_strings
-
-    ########################################################################################################################
-    ### CODE FOR COMBINING ACTION RULES TO MAKE NEW ACTION RULES
-    ########################################################################################################################
 
     #Returns a list of the combined action rules
     #If there are none, an empty list is returned
@@ -512,32 +416,6 @@ class Action_Rule:
                     self.__recursively_generate_bindings(keys, implicit_tree, level+1, new_param1, new_param2, updated_binding, all_bindings)
 
 
-
-
-
-#######################################################################################################################################################################
-#######################################################################################################################################################################
-#######################################################################################################################################################################
-
-
-    #What are all the unique parameters in this action rule?
-    def __get_all_parameters_in_action_rule(self):
-        intention_params = set(self.get_intention().get_all_var_params())
-        effect_params = set(self.__effect_set.get_all_var_params())
-        return intention_params | effect_params
-
-    #Mappings goes from self -> other
-    def __generate_all_possible_mappings(self, other, mappings):
-        vars_1 = self.__get_all_parameters_in_action_rule()
-        vars_2 = other.__get_all_parameters_in_action_rule()
-        #Need to remove any vars that are already mapped
-        for key in mappings:
-            vars_1.remove(key)
-            vars_2.remove(mappings[key])
-        possible_mappings = []
-        self.__get_all_possible_mappings_recursively(mappings, vars_1, vars_2, possible_mappings)
-        return possible_mappings
-
     #Note: Current_mapping_to_extend must be cloned every time it is extended...
     #The vars_1, vars_2 lists say what the left overs are... they must be cloned and updated each time
     #Recursion stops when no more extensions can be made, i.e. vars_1 is an empty list
@@ -555,26 +433,6 @@ class Action_Rule:
                         cloned_vars_2 = copy.deepcopy(vars_2)
                         cloned_vars_2.remove(var_2)
                         self.__get_all_possible_mappings_recursively(cloned_mapping, cloned_vars_1, cloned_vars_2, possible_mappings)
-
-    ########################################################################################################################
-    ### CODE FOR CHECKING IF 2 ACTION RULES ARE EQUIVALENT
-    ########################################################################################################################
-    def __action_rules_are_equivalent(self, other):
-        if self.__intention_param_type != other.__intention_param_type:
-            return False #Intention params differ
-        if self.index_key() != other.index_key():
-            return False #They don't have the same predicates
-        #Now that the quick checks are out of the way, the effect sets need to be checked for equivalency
-        mappings = {}
-        if self.__intention_param: #If there are intention params
-            mappings[self.__intention_param] = other.__intention_param
-            mappings[self.__initial_param] = other.__initial_param
-        result = self.__effect_set.equivalent(other.__effect_set, mappings)
-        return result
-
-    ########################################################################################################################
-    ### CODE FOR CHECKING IF AN ACTION RULE IS SUPPORTED BY AN EXAMPLE
-    ########################################################################################################################
 
     def __example_supports_action_rule(self, example):
         if example in self.__supporting_positive_examples:
@@ -639,19 +497,8 @@ class Constraint_Set:
     def get_constraint_strings(self):
         return [str(x) for x in self.__constraints]
 
-    #Not going to bother doing constraint equivalence at this stage
 
-    #this is NOT a permutation problem, it is simply a set equivalence problem
-    def concrete_constraints_match_example_with_bindings(self, concrete_constraints, bindings):
-        #The bindings (which are for the action rule) need to be applied to the concrete constraints
-        #And then if the set of bound constraints is equivalent to the constraints inside this object, it will work
-        bound_constraints = set()
-        for constraint in concrete_constraints:
-            bound_constraints.add(constraint.get_generalised_copy_with_dictionary(bindings))
-        return bound_constraints == self.__constraints
-
-
-######################################################################################################################################################
+########################################################################################################################################
 ######################################################################################################################################################
 ## The effects of an Action_Rule are stored in an Effect_Set object. The Effect_Set class is a private inner
 ## class, only used to help the Action_Rule. Other classes will only interface with the Action_Rule
@@ -852,25 +699,6 @@ class Effect_Set:
                         return None
         assert len(map_values_mapped) == len(set(equivalent_variables.values()))
         return map_values_mapped
-    #self.__latest_bindings = equivalent_variables #Because more than one algorithm uses this code. Changing the return type would be problematic
-
-    ############################################################################################
-    ###CODE FOR FINDING PERMUTATIONS OF EFFECTS TO MAP ONTO GOALS
-    ############################################################################################
-
-    #Returns a tuple with the bindings used, and the goals that have been bound
-    #Could make this more efficient, i.e. start by sorting the list from what would be the best match if it worked, to the worst, so that
-    #as soon as we find a match we know we won't find a better one
-    def best_way_to_bind_goals_to_effects(self, agent_goal):
-        all_permutations = self.find_possible_effect_permutations_for_goals(agent_goal.get_goals_sorted_by_predicate())
-        best_match = None
-        for permutation in all_permutations:
-            binding_information = self.bind_permutation_to_goals(permutation, agent_goal.get_flat_list())
-            if binding_information:
-                bindings, bound_goals = binding_information #unpack
-                if not best_match or len(best_match[1]) < len(bound_goals):
-                    best_match = binding_information
-        return best_match
 
     def find_possible_effect_permutations_for_goals(self, goals):
         effects_from_effect_set_to_consider = []
@@ -1016,8 +844,6 @@ class Effect_Set:
 class Precondition_Table:
 
     def __init__(self):
-        self.total_positive_examples = 0
-        self.total_negative_examples = 0
         self.preconditions = {} #Just using a dictionary for now because only keeping counts of ungeneralised effects
 
     def get_reliable_preconditions(self):
@@ -1053,7 +879,6 @@ class Precondition_Table:
     #any fact containing an object that was not bound to a variable in the effect set should not be considered for a pre condition
     def update_table(self, example, bindings):
         Shared.reference_to_agent.knowledge().context().update_context(example.get_initial_facts()) #The first step in updating the table is to update the context
-        self.total_positive_examples += 1 #How many positive example has the table seen?
         bound_objects = self.__reverse_dictionary(bindings) #It is possible this could be generated in the desired way in the first place
         partially_bound_facts = [] #What are the facts that will eventually need to be generalised using permutations?
         counted_facts = set()
@@ -1117,15 +942,6 @@ class Precondition_Table:
         if fact in self.preconditions:
             self.preconditions[fact].negatives += 1
 
-
-    def get_interesting_var_params(self):
-        var_params = set()
-        preconditions = self.get_reliable_preconditions()
-        for precondition in preconditions:
-            if precondition.get_predicate() != "hand_at" and precondition.get_predicate() != "+hand_at": #the places need to be tied to objects
-                var_params = var_params | precondition.get_all_var_params()
-        return var_params
-
 #A statistics object represents the data for a given precondition
 class Statistics:
     def __init__(self):
@@ -1134,9 +950,6 @@ class Statistics:
 
     def frequency(self):
         return self.positives / (self.negatives + self.positives)
-
-    def __total_exs(self):
-        return self.self.negatives + self.positives
 
     def precondition_is_reliable(self):
         return self.frequency() >= Shared.MINIMUM_PRECONDITION_FREQUENCY

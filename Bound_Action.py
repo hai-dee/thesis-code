@@ -3,10 +3,6 @@ import TheAgent
 import Fact
 from copy import copy
 
-#######################################################################################################################
-####DATA TYPES FOR THE PLANNER
-#######################################################################################################################
-
 #This represents an action that has been put on the planning stack. An action on the stack consists
 #of an action rule, and a dictionary of binding information that specifies what objects have been
 #bound to the variables in the action rule.
@@ -17,26 +13,11 @@ class Bound_Action:
         self.bindings = bindings
         self.goals = goals_to_accomplish #What goals is this action rule supposed to achieve?
 
-    #How many of the effect vars in this bound action are not in the bindings?
-    def count_unbound_effect_vars(self):
-        vars_in_effects = self.get_action_rule().vars_in_effects()
-        return len([var for var in vars_in_effects if var not in self.bindings])
-
     def score_for_bindings(self):
         return self.action_rule.score_for_bindings()
 
     def get_action_rule(self):
         return self.action_rule
-
-    def intention_param_unbound(self):
-        intention_param = self.action_rule.intention_param()
-        return intention_param not in self.bindings
-
-    def attempt_to_bind_intention_param(self, bindings):
-        if self.intention_param_unbound():
-            intention_param = self.action_rule.intention_param()
-            if intention_param in bindings:
-                self.bindings[intention_param] = bindings[intention_param]
 
     def id_of_action_rule(self):
         return self.action_rule.get_id()
@@ -85,7 +66,6 @@ class Bound_Action:
             type_needed = self.action_rule.intention_param_type()
             obj_to_use = self.__find_suitable_object(type_needed)
             param_for_obj = Fact.Param(obj_to_use, False, None)
-            intention_param_in_rule = self.action_rule.intention_param()
             self.bindings[self.action_rule.intention_param()] = param_for_obj
 
     #Note: This is does not handle the place type correctly.
@@ -108,12 +88,8 @@ class Bound_Action:
     def action_parameter(self):
         return self.bindings[self.action_rule.intention_param()]
 
-
     def stack_data_type(self):
         return "Action"
-
-    def motor_action_type(self):
-        return self.action_rule.get_intention().get_predicate()
 
     def number_of_goals_expected_to_accomplish(self):
         return len(self.goals)

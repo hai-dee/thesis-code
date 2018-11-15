@@ -15,6 +15,8 @@ from math import sqrt
 from math import pi as PI
 from time import sleep
 
+from utils.vect import Vect
+
 #For various stupid reasons, this isn't in the python libraries
 def signum(n):
     if n == 0:
@@ -23,10 +25,6 @@ def signum(n):
         return 1.0
     else:
         return -1.0
-
-####################################################################################################
-###Constants of the Table World
-####################################################################################################
 
 #Constants for the physics
 MAX_FORCE = 50
@@ -64,7 +62,6 @@ PROB_GRASP_NEAR = 0.75
 PROB_OF_MOVE = 0.35 #normally 0.35
 PROB_OF_HIT = PROB_OF_MOVE + 0.35 #normally 0.35
 PROB_OF_GRASP_NOT_NEAR = PROB_OF_HIT + 0.15 #normally 0.15
-PROB_OF_UNGRASP_NOT_HOLDING = 1
 
 #Probabilities for differet
 PROB_TARGET_WALL = 0.4
@@ -82,8 +79,6 @@ class TableWorldSimulation:
     def __init__(self):
         self.__hand_force_y = 0
         self.__hand_force_x = 0
-        self.__hand_chance_force_x = 0
-        self.__hand_chance_force_y = 0
         self.__hand_pos_x = 0
         self.__hand_pos_y = 15 + HAND_RAD
         self.__hand_vel_x = 0
@@ -92,13 +87,10 @@ class TableWorldSimulation:
         self.__hand_accel_y = 0
         self.__hand_touching_obj = False
         self.__hand_touching_wall = False
-        self.__previously_touching = False
         self.__finger_force = 0
-        self.__finger_change_force = 0
         self.__finger_pos = 0
         self.__finger_vel = 0
         self.__gripping = False
-        self.__previously_gripping = False
         self.__sound_occurred = False
         self.__grasped_obj = None
         self.__last_collision = None
@@ -124,8 +116,6 @@ class TableWorldSimulation:
     def reset(self):
         self.__hand_force_y = 0
         self.__hand_force_x = 0
-        self.__hand_chance_force_x = 0
-        self.__hand_chance_force_y = 0
         self.__hand_pos_x = 0
         self.__hand_pos_y = 15 + HAND_RAD
         self.__hand_vel_x = 0
@@ -134,13 +124,10 @@ class TableWorldSimulation:
         self.__hand_accel_y = 0
         self.__hand_touching_obj = False
         self.__hand_touching_wall = False
-        self.__previously_touching = False
         self.__finger_force = 0
-        self.__finger_change_force = 0
         self.__finger_pos = 0
         self.__finger_vel = 0
         self.__gripping = False
-        self.__previously_gripping = False
         self.__sound_occurred = False
         self.__grasped_obj = None
         self.__last_collision = None
@@ -333,19 +320,6 @@ class TableWorldSimulation:
 
     def objects_currently_in_world(self):
         return self.__objects
-
-    def names_currently_in_the_world(self):
-        object_names = set([obj.name for obj in self.__objects if obj.on_table()])
-        wall_names =  set(["left_wall", "right_wall", "near_wall", "far_wall"])
-        return object_names | wall_names
-
-
-    def __complete_action(self):
-        "todo this refactored support method"
-
-################################################################################################
-### COMPUTE THE NEXT STATE IN THE SIMULATION
-################################################################################################
 
     def __make_state_object(self):
         state = State()
@@ -571,20 +545,6 @@ class TableWorldSimulation:
                     else:
                         self.__collide_objects(obj1, obj2)
 
-    #This method updates the relative position variables stored in each object
-    def __update_relative_object_positions(self):
-        for obj in self.__objects:
-            if self.__on_table(obj):
-                obj.rx = obj.x - self.__hand_pos_x
-                obj.ry = obj.y = self.__hand_pos_y
-                obj.drx = obj.vx - self.__hand_vel_x
-                obj.dry = obj.vy - self.__hand_vel_y
-            else:
-                obj.rx = FLOOR_X
-                obj.ry = FLOOR_Y
-                obj.drx = 0
-                obj.dry = 0
-
     def __compute_touch_sensors(self):
         self.__hand_touching_wall = (self.__hand_pos_x + HAND_RAD >= RIGHT_WALL - EPSILON
         or self.__hand_pos_x - HAND_RAD <= LEFT_WALL + EPSILON
@@ -801,20 +761,11 @@ class TableWorldSimulation:
         #This is where the stuff for setting the mouse forces went, but because this feature has been disabled, not bothering with that code
         if not self.__current_action and random() < PROB_OF_START_ACTION: #Start a new action...
             self.__choose_new_action()
-            if self.__current_action:
-                self.__log_to_data_file("Starting " + self.__current_action_string + "\n")
         if not self.__current_action:
             self.__time_since_grasp = 0 #Where is this variable defined?
             self.__set_actuators_random() #Just do some random behaviour
         else:
             self.__set_actuators_action() #Continue the current action
-        ## end of new bit of code
-
-        ####These lines of code seem to be redundant #####
-        self.__hand_chance_force_x = self.__hand_force_x - old_fx
-        self.__hand_chance_force_y = self.__hand_force_y - old_fy
-        self.__finger_change_force = self.__finger_force - old_ff
-        ##################################################
 
     def __set_actuators_action(self):
         if self.__current_action == "MoveTo":
@@ -900,7 +851,6 @@ class TableWorldSimulation:
         dy = self.__target_y - self.__hand_pos_y
         dist = hypot(dx, dy)
         if self.__move_action_finished(dx, dy, dist): #Are we already at the destination?
-            self.__log_to_data_file("Ending " + self.__current_action_string + "\n")
             self.__reset_action_state()
         else: #Still need to move...
             t_speed = self.__target_speed
@@ -959,7 +909,6 @@ class TableWorldSimulation:
         dy = self.__target_y - self.__hand_pos_y
         dist = hypot(dx, dy)
         if (self.__hand_past_target(dx, dy, dist) and self.__hand_vel_x == 0 and self.__hand_vel_y == 0) or self.__hand_stuck(dist):
-            self.__log_to_data_file("Ending " + self.__current_action_string + "\n")
             self.__reset_action_state()
         else:
             t_speed = 0
@@ -1011,14 +960,12 @@ class TableWorldSimulation:
 
     def __set_actuators_grasp_action(self):
         if self.__gripping or self.__finger_pos >= 1 or self.__fingers_stuck():
-            self.__log_to_data_file("Ending " + self.__current_action_string + "\n")
             self.__reset_action_state()
         else: #Still need to grasp... set finger force to max grasp force
             self.__finger_force = 1
 
     def __set_actuators_ungrasp_action(self):
         if self.__finger_pos <= -1 or self.__fingers_stuck():
-            self.__log_to_data_file("Ending " + self.__current_action_string + "\n")
             self.__reset_action_state()
         else: #Still need to ungrasp... set finger force to max ungrasp force
             self.__finger_force = -1
@@ -1093,49 +1040,6 @@ class TableWorldSimulation:
         self.__current_action = "Ungrasp"
         self.__current_action_string = "Ungrasp"
 
-    #Chooses a target, and if the target selection is successful, then the target information variables are set and True is returned
-    #If target selection is not successful, False is returned.
-    #Currently, I don't agree with all the fail conditions. These will need to be discussed, as I suspect that some of them should really be learnt in the effect learning rather than the
-    #control learning.
-    def __choose_action_target(self):
-        self.__target_obj = None
-        choice = random()
-        #If it is to pick a wall, each wall has an equal chance of being picked...
-        if choice < PROB_TARGET_WALL*0.25: #Middle of near wall
-            self.__target_x = (LEFT_WALL + RIGHT_WALL)/2
-            self.__target_y = NEAR_WALL + HAND_RAD
-            self.__target_name = "near_wall"
-        elif choice < PROB_TARGET_WALL * 0.5: #Middle of far wall
-            self.__target_x = (LEFT_WALL + RIGHT_WALL)/2
-            self.__target_y = FAR_WALL - HAND_RAD
-            self.__target_name = "far_wall"
-        elif choice < PROB_TARGET_WALL * 0.75: #Middle of left wall
-            self.__target_x = LEFT_WALL + HAND_RAD
-            self.__target_y = (FAR_WALL + NEAR_WALL) / 2
-            self.__target_name="left_wall"
-        elif choice < PROB_TARGET_WALL * 1: #Middle of right wall
-            self.__target_x = RIGHT_WALL - HAND_RAD
-            self.__target_y = (FAR_WALL + NEAR_WALL)/2
-            self.__target_name="right_wall"
-        #Else it is going to pick an object
-        else:
-            obj = self.__objects [int((choice - PROB_TARGET_WALL) * len(self.__objects)/ PROB_TARGET_OBJ)]
-            if not self.__on_table(obj) or obj.vx != 0 or obj.vy != 0:
-                return False #If the object is not on the table, or it is moving, return False. I don't like this assumption; would a kid not try and grab a moving object?
-            self.__target_name= obj.name
-            dist_x = obj.x - self.__hand_pos_x
-            dist_y = obj.y - self.__hand_pos_y
-            dist = hypot(dist_x, dist_y)
-            if dist < HAND_RAD + OBJ_RAD + 2: #I also don't like this assumption. It seems unnecessary. The agent needs to learn this, rather than it being coded into the controller
-                return False
-            self.__target_x = obj.x - (OBJ_RAD + HAND_RAD) * dist_x / dist
-            self.__target_y = obj.y - (OBJ_RAD + HAND_RAD) * dist_y / dist
-            self.__target_obj = obj
-        if abs(self.__target_x - self.__hand_pos_x) < 2 and abs(self.__target_y - self.__hand_pos_y) < 2:
-            return False
-        self.__target_dir = atan2(self.__target_y - self.__hand_pos_y, self.__target_x - self.__hand_pos_x)
-        return True
-
 
     #Currently a prototype version, it just keeps searching (using a recursive loop)
     def __choose_place_target(self):
@@ -1207,21 +1111,8 @@ class TableWorldSimulation:
         self.__target_obj = None
 
 
-####################################################################################################
-### CODE FOR HANDLING FILES
-####################################################################################################
-    #Need to sort out how to go about this...
-    def __log_to_data_file(self,info_to_log):
-        "Not Implemented"
-
-####################################################################################################
-### OBJECT CLASS
-####################################################################################################
-
-
 class Obj:
 
-    #Need to put the relative stuff in still...
     def __init__(self, x, y, name, colour):
         self.x = x
         self.y = y
@@ -1231,10 +1122,6 @@ class Obj:
         self.colour = colour
         self.is_grasped = False
 
-    #Note: The 5 is obj_rad
-    def on(self, u, v):
-        return self.__closer(u - self.x, v - self.y, 5)
-
     def __closer(self, dx, dy, dist):
         return abs(dx) <= dist and abs(dy) <= dist and (dx**2 + dy**2) <= dist**2
 
@@ -1243,35 +1130,3 @@ class Obj:
 
     def on_table(self):
             return self.x <= RIGHT_WALL + OBJ_RAD
-
-    #What is actually using this? Why is it necessary when all the other code just treats the fields are public
-    def set_pos(self, u, v):
-        self.x = u
-        self.y = v
-        self.vx = 0
-        self.vy = 0
-
-####################################################################################################
-### VECT CLASS
-####################################################################################################\
-
-class Vect:
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.polarP = False
-
-    def hypot(self):
-        if not polarP:
-            self.hypot = hypot(x,y)
-            self.direction = atan2(x,y)
-            self.polarP =True
-        return self.hypot
-
-    def direction(self):
-        if not polarP:
-            self.hypot = hypot(x,y)
-            self.direction = atan2(x,y)
-            self.polarP =True
-        return self.direction

@@ -37,21 +37,13 @@ class Primitive_Action:
     #Constructor
     #action_type: The name of the action this primitive action represents info for, e.g. "Move_To", "Grasp", etc
     def __init__(self, action_type):
-
         #Set up the primitive action's necessary data
         self.__name = action_type
         #Action rules are indexed in their nodes, based on their effects
         self.__indexes = {}
         for i in range(1, Shared.MAX_EFFECT_SET_SIZE + 1): #Generate all indexes
             self.__indexes[i] = {}
-
-
         self.__dummy_node = Effect_Set_Node(Effect_Set([]), None, self)
-
-        #Set up some data for statistical purposes
-        self.__number_of_examples_processed = 0
-        self.__number_of_rules = 0
-        self.__counts = Counter()
 
     #Update the knowledge in this primitive action using the given example
     def learn_from_example(self, example):
@@ -69,7 +61,6 @@ class Primitive_Action:
         if effects_sets_for_goal_set != []:
             for node in effects_sets_for_goal_set:
                 q = Queue()
-                #Using breadth first just because I wanted the practice at implementing it
                 q.put(node)
                 while not q.empty():
                     next_node = q.get()
@@ -78,8 +69,7 @@ class Primitive_Action:
                         for sub_node in next_node.get_subset_links():
                             if sub_node not in power_set_nodes:
                                 q.put(sub_node)
-        else: #Need to use the less efficient algorithm
-        #Not bothering to do any optimisation unless it becomes a necessity
+        else:
             ps = self.powerset(goal_set.goals())
             for s in ps:
                 if len(s) > 0:
@@ -108,30 +98,8 @@ class Primitive_Action:
             predicate_names.append(goal.get_predicate())
         return tuple(sorted(predicate_names))
 
-
-#########################################################################################################################
-#########################################################################################################################
-#########################################################################################################################
-
-
-    #Semi private, returns the outer index structures
     def _get_indexes(self):
         return self.__indexes
-
-    #Returns all action rules of the specified size
-    def action_rules_of_size(self, n):
-        count = 0
-        action_rules = [] #The list to put AR's in
-        index = self.__indexes[n] #The outer index
-        for key in index: #Go through each entry
-            es_list = index[key]
-            count += 1
-            for node in es_list:
-
-                ar_list = node.get_action_rules()
-                for ar in ar_list:
-                    action_rules.append(ar)
-        return action_rules
 
     def effect_set_nodes_of_size(self, n):
         effect_set_nodes = []
@@ -141,14 +109,6 @@ class Primitive_Action:
             for node in es_list:
                 effect_set_nodes.append(node)
         return effect_set_nodes
-
-    #Which motor action is this structure for?
-    def get_motor_action(self):
-        return self.__name
-
-#####################################################################################################
-###CODE FOR UPDATING PRIMITIVE ACTION KNOWLEDGE WITH EXAMPLE
-#####################################################################################################
 
     def equiv_node(self, node):
         n = node.get_effect_set().size()
@@ -174,7 +134,6 @@ class Primitive_Action:
     #Use the given example to learn more about the action rules for the given primitive action
     def __learn_from_example(self, example):
         assert example.get_action() == self.__name #If this fails, something is wrong with the class that called process_example()
-        self.__number_of_examples_processed += 1
 
         effects = example.get_effect_facts()
         intention = example.get_intention_fact()
@@ -286,17 +245,6 @@ class Effect_Set_Node:
 
     def get_support(self):
         return self.__support
-
-    def best_bindings_score(self):
-        best_score = 0
-        for action_rule in self.get_action_rules():
-            score_for_ar = action_rule.score_for_bindings()
-            if score_for_ar > best_score:
-                best_score = score_for_ar
-        return best_score
-
-    def get_unique_support(self):
-        return self.__support - len(self.__subsumed_examples_supporting)
 
     def best_ar_support_above_threshold(self):
         if self.__best_ar_support_above == True:
@@ -417,15 +365,6 @@ class Effect_Set_Node:
     def get_effect_set(self):
         return self.__effect_set
 
-    def get_superset_ids(self):
-        return [node.get_action_rule().get_id() for node in self.__super_set_links]
-
-    def get_subset_ids(self):
-        return [node.get_action_rule().get_id() for node in self.__sub_set_links]
-
-    def get_example_ids(self):
-        return self.get_action_rule().positive_example_ids()
-
     #Do these two nodes contain an equivalent intention and effect set?
     def equivalent(self, other):
         intent1 = self.get_intention()
@@ -447,31 +386,11 @@ class Effect_Set_Node:
         else:
             return None
 
-    #TODO define this properly!!
-    def above_combine_threshold(self):
-        return self.__support > 8
-
    #goals is a list of effects.
     def maps_onto_goals(self, goal_set):
         goals = goal_set.goals()
         goal_effect_set = Effect_Set(goals) #Exploit the effect set type to make this easy!
         return self.get_effect_set().equivalent(goal_effect_set, {}, True) is not None
-
-    ################################################################################################################################
-    ###### QUALITY HEURISTICS
-    ################################################################################################################################
-
-    #Currently just uses lots of magic numbers. Need to clean this up once confirmed this is the right approach
-
-    def is_suitable(self):
-        return (self.has_sufficient_support()) and (not self.is_subsumed()) and (self.has_good_action_rules())
-
-    def subsumed_but_suitable_otherwise(self):
-        return (self.has_sufficient_support()) and (self.is_subsumed()) and (self.has_good_action_rules())
-
-    #Definition: At least 50% of the supporting examples are unique
-    def is_subsumed(self):
-        return ((self.get_unique_support() / self.get_support()) <= 0.5)
 
     def var_count(self):
         return len(set(list(self.get_effect_set().get_all_var_params()) + list(self.get_intention().get_parameters())))
@@ -480,7 +399,6 @@ class Effect_Set_Node:
         if self.get_action_rules():
             return max([ar.quality_score() for ar in self.get_action_rules()])
         else:
-            print("I have no action rules....")
             return 0
 
     def best_action_rule(self):

@@ -47,13 +47,8 @@ class The_Agent:
     def set_new_knowledge_base(self, new):
         self.__knowledge = new
 
-    def world_state(self):
-        return self.__motor_control.get_simulation()
-
     def set_world_state(self, state):
-        "Currently, this is just implemented as a simulation object. There will be more cost effective ways too"
         self.__motor_control.set_simulation(state)
-
 
     #Return the agent's learner
     def learner(self):
@@ -73,10 +68,6 @@ class The_Agent:
     #Refine action rules with planner!
     def plan(self):
         self.learner().plan()
-
-    #This method tells the agent to use its planner to make a plan and carry it out for these effects
-    def plan_for_effects(self, effects):
-        self.planner().make_1_step_plan_for_goals(self.__motor_control.get_current_state(), effects)
 
     def show_next_example(self):
         random_action_thread = Thread(target=self.controller().do_random_action)
@@ -114,9 +105,6 @@ class AgentLearner:
     def __init__(self):
         self.__examples_learnt_from = 0
         self.__planning_log = Planning_Log() #The agent will learn about its rules using the planning log
-
-    def get_planning_log(self):
-        return self.__planning_log
 
     #This method creates a new thread, and learns on the new thread until the control variable says to stop learning, at which point
     #the method and thread exit
@@ -163,7 +151,6 @@ class AgentLearner:
             ##Do we need to do file writing?
             if next_example.get_example_id() %500 == 0:
                 File_Writer.FileWriter().write_all_knowledge_to_file(The_Agent().knowledge())
-                File_Writer.FileWriter().generate_links_file(The_Agent().knowledge())
             self.__examples_learnt_from += 1
             should_stop += 1
             if should_stop == 4000:
@@ -432,10 +419,6 @@ class AgentPlanner:
                 return True
         return False
 
-######################################################################################################################
-### IDENTIFYING WHAT GOALS ARE ALREADY SATISFIED IN CURRENT STATE
-######################################################################################################################
-
     def test_current_state_check(self, goals):
         current_state = The_Agent().controller().get_current_state()
         unsatisfied, bindings = self.map_goals_onto_current_state(goals, current_state)
@@ -500,10 +483,6 @@ class AgentPlanner:
             else:
                 no_vars.append(goal) #This could actually include facts that contain objects
         return (place_vars, normal_vars, no_vars, concrete_places)
-
-    ###############################################################
-    #########   HANDLE THE NORMAL VAR FACTS
-    ###############################################################
 
     #Map the facts that contain vars but no place vars onto the current state and generate bindings
     def map_non_place_var_facts(self, contain_normal_vars_facts, current_state, used_objs):
@@ -709,23 +688,7 @@ class AgentPlanner:
                 return False
         return True
 
-    def __get_candidate_action_rule_list(self, agent_goal):
-        return The_Agent().knowledge().find_possible_ars_for_goals(agent_goal.goals())
-
-
-    #returns a suitability score based on how many unsatisfied goals there are in the curent state
-    #max is 20 (hardcoded currently)
-    def score_for_current_state(self, bound_ar, current_state):
-        potential_goals = bound_ar.goals_for_preconditions().goals()
-        unsatisfied_goals, bindings = self.map_goals_onto_current_state(potential_goals, current_state)
-        bound_ar.bindings_for_current_state = bindings #Cache it
-        bindings_score = bound_ar.score_for_bindings()
-        return (10 - bindings_score) + (10 -  len(unsatisfied_goals))
-
-
-
     def new_choose_best_rule(self, current_goal):
-        num_goals = current_goal.number_of_goals()
         nodes = The_Agent().knowledge().power_set_nodes_for_goal(current_goal)
         #Firstly, pick an effect set [Node]
         power_set_nodes_to_process = sorted(list(nodes), key=lambda n: (n.get_effect_set().size(), n.best_action_rule_score()))
@@ -792,22 +755,11 @@ class AgentMotorControl:
     def set_simulation(self, new):
         self.__simulation = new
 
-    def get_simulation(self):
-        return self.__simulation
-
     def do_random_action(self):
         return self.__simulation.get_next_example()
 
     def get_current_state(self):
         return Qualitative_State(self.__simulation.get_current_state())
-
-    def check_facts_against_current_state(self, facts):
-        unsatisfied_facts = []
-        current_qual_state = self.get_current_state()
-        for fact in facts:
-            if not current_qual_state.contains_fact(fact):
-                unsatisfied_facts.append(fact)
-        return unsatisfied_facts
 
     def do_grasp_action(self):
         grasp_thread = Thread(target=self.__simulation.do_grasp_action)

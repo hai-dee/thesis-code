@@ -3,33 +3,32 @@ from Fact import Fact
 from math import hypot
 from math import ceil
 from math import floor
-from random import uniform
-from collections import Counter 
+from collections import Counter
 from random import choice
 import Simulated_Vision #A collection of functions useful for determining visual properties of the agent's world
 
 #This class represents the qualitative state of the world at a certain time.
 #Most of the "vision system" code is here too.
 class Qualitative_State:
-    
+
     def __init__(self, quant_state):
         self.__qualitative_state_facts = self.__make_list_of_qual_facts(quant_state)
         self.__quantitative_state = quant_state
         #There is code in the example class that could be used for making a dictionary out of it if necessary...
-    
+
     def get_quantitative_state(self):
         return self.__quantitative_state
-    
-    
+
+
     def get_qualitative_facts(self):
         return self.__qualitative_state_facts
-    
+
     def hand_quant_x(self):
         return self.__quantitative_state.x
-    
+
     def hand_quant_y(self):
         return self.__quantitative_state.y
-    
+
     #Takes a generalised goal as a parameter, and returns the facts that can be mapped onto it.
     def get_candidates_for_goal(self, goal):
         facts_with_same_predicate = self.__facts_with_predicate(goal.get_predicate())
@@ -38,28 +37,28 @@ class Qualitative_State:
             if self.__fact_matches_goal(goal, fact):
                 candidates.append(fact)
         return candidates
-    
-    
+
+
     def __facts_with_predicate(self, predicate):
         if predicate[0] == "+": #If this is a positive predicate
             predicate_without_plus = predicate[1:]
         else:
             predicate_without_plus = predicate
         return [fact for fact in self.get_qualitative_facts() if fact.get_predicate() == predicate_without_plus]
-    
-    
+
+
     def __fact_matches_goal(self, goal, fact):
         for i in range(len(goal.get_parameters())):
             param_in_goal = goal.get_parameters()[i]
             param_in_fact = fact.get_parameters()[i]
-            if param_in_goal.is_var():    
+            if param_in_goal.is_var():
                 if param_in_goal.param_type() != param_in_fact.param_type():
                     return False
             else: #It is a value
                 if param_in_goal.identifier() != param_in_fact.identifier():
                     return False
         return True
-    
+
     def contains_fact(self, fact):
         if fact.positive_predicate(): #This is for something that SHOULD exist
             plain_copy = fact.get_plain_copy_of_fact()
@@ -68,12 +67,12 @@ class Qualitative_State:
             plain_copy = fact.get_plain_copy_of_fact()
             return plain_copy not in set(self.get_qualitative_facts())
         else:
-            return fact in set(self.get_qualitative_facts())    
-    
+            return fact in set(self.get_qualitative_facts())
+
     def place_fact_true(self, fact):
         result = Simulated_Vision.constraint_satisfied(fact, self.get_quantitative_state())
         return result
-    
+
 
     #Return a dictionary of all the objects currently in the world, by type
     def objects_dictionary(self):
@@ -83,12 +82,12 @@ class Qualitative_State:
         objs["o"] = set(self.__quantitative_state.objects.keys())
         return objs
 
-        
+
     #Copied from example class for now. Will collapse the code down once I know it actually works
     def __make_list_of_qual_facts(self, quant_state):
-        qual_list = [] #Will add them all into dict at the end        
+        qual_list = [] #Will add them all into dict at the end
         ########################################################################################
-        ## FACTS RELATED TO THE TOUCH SENSOR VARIABLES 
+        ## FACTS RELATED TO THE TOUCH SENSOR VARIABLES
         if quant_state.grip: #Is the hand currently grasping?
             qual_list.append(Fact("grasp_sensor", None))
         if quant_state.touch: #Is the hand currently touching something?
@@ -99,10 +98,10 @@ class Qualitative_State:
         #if quant_state.vx != 0 or quant_state.vy != 0: #Is the hand currently moving?
         #    qual_list.append(Fact("+hand_moving", None))
         #########################################################################################
-        
-        
+
+
         #########################################################################################
-        ## FACTS RELATED TO THE FINGERS 
+        ## FACTS RELATED TO THE FINGERS
         if quant_state.finger_vel != 0: #Are the fingers currently moving?
             qual_list.append(Fact("fingers_moving", None)) #Semi redundant
         if quant_state.finger_vel < 0:
@@ -114,13 +113,13 @@ class Qualitative_State:
         if quant_state.finger_pos == 1:
             qual_list.append(Fact("fingers_closed", None))
         #########################################################################################
-        
+
         #########################################################################################
         ### FACTS RELATED TO RELATIONSHIPS BETWEEN OBJECTS
         #Note: Some of these probably need to be refactored.
         #Facts related to relationships between the hand, objects, and walls
         #The relationships between the walls are always the same for this world, hardcode this in for now (this could be calculated if necessary)
-        
+
         hand_place = (quant_state.x, quant_state.y)
 
         for i in range(len(Shared.walls_wrap_around)):
@@ -183,8 +182,8 @@ class Qualitative_State:
                         if wall == "right_wall":
                             set_of_facts.add(Fact("behind_drop", [place_name, obj_name])) #hack!
         return list(set_of_facts)
-    
-       
+
+
     def facts_for_places(self, places):
         all_facts = []
         #Get facts for each individual place
@@ -194,10 +193,10 @@ class Qualitative_State:
         #Get facts that involve both places
         if len(places) == 2:
             quant_state = self.__quantitative_state
-            ((place_x1, place_y1), place_name1) = places[0]
-            ((place_x2, place_y2), place_name2) = places[1]
+            ((place_x1, place_y1), _) = places[0]
+            ((place_x2, place_y2), _) = places[1]
             if Simulated_Vision.clear_path_exists((place_x1, place_y1), (place_x2, place_y2), quant_state):
-                "clear path commented out"                
+                "clear path commented out"
 		#all_facts.append(Fact("clear_path", [place_name1, place_name2]))
             else:
                 print("NOT CLEAR")

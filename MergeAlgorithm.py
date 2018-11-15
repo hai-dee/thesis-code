@@ -1,4 +1,4 @@
-#This file just contains the code for the merging algorithm. 
+#This file just contains the code for the merging algorithm.
 #I am putting it in a seperate file for testing before integrating it
 
 from Fact import Fact
@@ -17,7 +17,7 @@ intent2 = Fact.make_fact_from_string("Hit(?p11084)")
 
 
 
-#This is the actual algorithm. It uses es1, es2, intent1, and intent2 as the data. 
+#This is the actual algorithm. It uses es1, es2, intent1, and intent2 as the data.
 #The integrated algorithm will extract the data from the action rules, which is similar
 
 def get_all_merged_action_rules():
@@ -30,8 +30,9 @@ def get_all_merged_action_rules():
     #Now that we know there is a possibility they will merge, find different possible ways
     implicit_tree = make_implicit_tree_dictionary(es1, es2)
     es1_index = [None] + list(implicit_tree.keys())
+    #Unused var, but keeping incase of side effects.
     merged_ars = generate_merged_ars(implicit_tree, es1_index)
-    
+
 def make_predicate_dictionary(effects):
     d = dict()
     for effect in effects:
@@ -40,7 +41,7 @@ def make_predicate_dictionary(effects):
             d[predicate] = set()
         d[predicate].add(effect)
     return d
-    
+
 #What are all the possible facts from es2 that could be merged onto each fact from es1?
 #Returns an ordered dictionary
 #Order is important for the further processing, i.e. the agent wants to know that it will
@@ -62,12 +63,7 @@ def generate_merged_ars(implicit_tree, es1_index):
     remaining_for_es2 = es2 + [None]
     merged_action_rules = []
     recursively_find_merged_ars(es1_index, implicit_tree, merged_action_rules, None, None, [], None, 0, {}, remaining_for_es2)
-    for list_of_effects in merged_action_rules:
-        print("###################")
-        for effect in list_of_effects:
-            print(effect)
-        print("###################")
-    
+
 
 #The variables starting with g are the data that could be global, and the variables starting with p are proper parameters
 #Everything is passed as it is easier to avoid the globals
@@ -79,8 +75,8 @@ def generate_merged_ars(implicit_tree, es1_index):
 #p_bindings: What bindings do we have so far?
 #p_remaining_for_es2: Which es2 facts have not yet been combined with es1 facts?
 def recursively_find_merged_ars(es1_index, implicit_tree, merged_action_rules, e1, e2, merged_effects, p_mergeless_effect_in_es1, level, bindings, remaining_for_es2):
-    
-    #Process what should happen in this call 
+
+    #Process what should happen in this call
     if level != 0: #This means we have just started the program
         if e2 == None: #We are wanting to match p_effect1 onto nothing
             #As long as we haven't already got a p_effect1 unmerged, we can do this
@@ -94,8 +90,8 @@ def recursively_find_merged_ars(es1_index, implicit_tree, merged_action_rules, e
             if not merge_effects(e1, e2, bindings, merged_effects):
                 print("Base case 2 triggered from bindings contradiction")
                 return #Don't do anything else on this call
-            
-    #Now figure out what should be done next    
+
+    #Now figure out what should be done next
     if level == len(implicit_tree): #If we are at the lowest level
         print("Base case 3 triggered from a complete merged_effects")
         assert len(remaining_for_es2) == 1
@@ -103,7 +99,7 @@ def recursively_find_merged_ars(es1_index, implicit_tree, merged_action_rules, e
             merge_less_effect_in_es2 = list(remaining_for_es2)[0]
             new_action_rules = action_rules_for_merged_effects(merged_effects, bindings, p_mergeless_effect_in_es1, merge_less_effect_in_es2)
             #This method might have more than one merged action rule, because restrictions on the unmerged facts are a bit looser
-            #Is the contents of updated_merged_effects a valid 
+            #Is the contents of updated_merged_effects a valid
             for action_rule in new_action_rules:
                 merged_action_rules.append(action_rule)
     else: #Recursive case
@@ -124,7 +120,7 @@ def merge_effects(e1, e2, existing_bindings, existing_merged_effects):
     params2 = e2.get_parameters()
     if len(params1) != len(params2):
         return False
-    params_from_es2_bound = existing_bindings.values() 
+    params_from_es2_bound = existing_bindings.values()
     for i in range(len(params1)):
         p1 = params1[i]
         p2 = params2[i]
@@ -147,19 +143,19 @@ def merge_effects(e1, e2, existing_bindings, existing_merged_effects):
 def action_rules_for_merged_effects(merged_effects, bindings, un_merged_in_es1, un_merged_in_es2):
     #This method's main role is to handle the fact that there might be more than one way of dealing with
     #any bindings that haven't yet been processed
-    
+
     possible_ars = []
     invalid_binding = None #Is there anyway of merging that would cause only n facts?
-    
+
     if un_merged_in_es1.get_predicate() == un_merged_in_es2.get_predicate():
         bindings_copy = deepcopy(bindings)
         if merge_effects(un_merged_in_es1, un_merged_in_es2, bindings_copy, []) == True:
             invalid_binding = bindings_copy
-    
+
     #What are all the unbound variables in es1?
     remaining_1 = [var for var in un_merged_in_es1.get_parameters() if var not in bindings.keys()]
     remaining_2 = [var for var in un_merged_in_es2.get_parameters() if var not in bindings.keys()]
-    
+
     #And what are all the binding permutations for these unbound variables?
     if remaining_1 != [] and remaining_2 != []:
         extended_bindings = get_extended_bindings(remaining_1, remaining_2, bindings)
@@ -195,8 +191,8 @@ def get_extended_bindings(vars1, vars2, existing_bindings):
         return extended_bindings
     else:
         return None
-    
-    
+
+
 def make_type_dictionary(variables):
     d = dict()
     for variable in variables:
@@ -204,7 +200,7 @@ def make_type_dictionary(variables):
         if var_type not in d:
             d[var_type] = set()
         d[var_type].add(variable)
-    return d    
+    return d
 
 def recursively_generate_bindings(keys, implicit_tree, level, param1, param2, current_binding, all_bindings):
     updated_binding = current_binding

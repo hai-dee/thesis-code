@@ -17,7 +17,6 @@ def constraint_satisfied(constraint, quant_state):
     #Do some initial processing
     predicate = constraint.get_predicate()
     parameters = constraint.get_parameters()
-    first_type = parameters[0].param_type()
     if len(parameters) > 1:
         second_type = parameters[1].param_type()
     if len(parameters) > 2:
@@ -74,9 +73,6 @@ def get_random_place(quant_state):
         if is_reachable(quant_state, (x, y)):
             return (x,y)
 
-def get_random_aligned_place(quant_state):
-    "todo"
-
 def get_point_for_constraints(constraints, updated_bindings, quant_state):
     #Need to go through every constraint, and call the appropriate methods
     integer_solutions = Counter()
@@ -85,7 +81,6 @@ def get_point_for_constraints(constraints, updated_bindings, quant_state):
         constraint = constraint.get_specific_copy_with_dictionary(updated_bindings)
         predicate = constraint.get_predicate()
         parameters = constraint.get_parameters()
-        first_type = parameters[0].param_type()
         second_type = parameters[1].param_type()
         if len(parameters) > 2:
             third_type = parameters[2].param_type()

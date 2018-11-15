@@ -70,9 +70,6 @@ def initialise_window():
 
 
 def initialise_control_frame(controls_frame):
-    #Label - "Learning"
-    w = Label(controls_frame, text="Learning Controls", fg="red").grid(row=0, column=0)
-    #Resume/Pause button (does not preserve the thread on pause, as that is pointless)
     resume_learning_button = Button(controls_frame, text="Resume Learning", command=lambda: resume_learning(resume_learning_button), width=BUTTON_WIDTH)
     resume_learning_button.grid(row=10, column=0)
     do_planning_button = Button(controls_frame, text="Resume Random Planning", command=lambda: resume_planning(do_planning_button), width=BUTTON_WIDTH)
@@ -194,25 +191,12 @@ def resume_planning(do_planning_button):
         do_planning_button["text"] = "Pause Random Planning"
         The_Agent().plan()
 
-def fix():
-    "todo"
-
-#Clears the data the agent has learnt.
-def clear_data():
-    "todo"
-
 def print_state():
     print("=======CURRENT STATE OF WORLD=======")
     qual_state = The_Agent().controller().get_current_state()
     for fact in qual_state.get_qualitative_facts() + qual_state.facts_for_place(((qual_state.hand_quant_x(), qual_state.hand_quant_y()), "Current")):
         print(fact)
     print("====================================")
-
-#Saves the data the agent has learnt
-def save():
-    if not Shared.currently_planning and not Shared.currently_learning:
-        save_file = asksaveasfile()
-        File_Writer.FileWriter().save_learnt_data(save_file.name)
 
 def load():
     if not Shared.currently_planning and not Shared.currently_learning:
@@ -266,7 +250,6 @@ def reset_vis():
 #Unfortunately this isn't going to stop it from doing the learning if it is still doing that.
 #Might just want to kill the thread instead.
 def exit_window():
-    Shared.playing = False
     Shared.visualisation_enabled = False
     Shared.currently_drawing.acquire()
     Shared.currently_drawing.notify()
